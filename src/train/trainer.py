@@ -1,28 +1,34 @@
 from src.config.static_config import StaticConfig
-from src.utils.utils import list_folders
+from src.utils.utils import list_folders, create_folder
 import pandas as pd
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from src.preprocess.preprocessor import SeqProcessor
 from src.train.bidirectional_lstm_model import Bidirectional_LSTM_Model
-from src.utils.io import create_folder
 
+
+import pickle
 class Trainer(object):
     def __init__(self):
         self.data_sets = []
+
         self.global_config = StaticConfig()
-        self.preprocessor = SeqProcessor()
+        self.preprocessor = None
+
 
 
     def load_data(self, train_data_folder_path):
+        tokenizer = pickle.load(open('{}/{}'.format(train_data_folder_path, self.global_config.tokenizer_save_name)
+                , "rb"))
+        self.preprocessor = SeqProcessor(tokenizer)
         for sub_folder in self.global_config.labels:
             samples = list_folders("{}/{}/".format(train_data_folder_path, sub_folder))
             if len(samples) == 0:
-                return
-            samples = ["{}/{}/{}".format(train_data_folder_path, sub_folder, sample) for sample in samples]
+                continue
             for sample in samples:
-                print ('sample', sample)
-                loaded_sample = pd.read_csv(sample)
-                self.data_sets.append((self.preprocessor.preprocess_train(loaded_sample), train_data_folder_path, sub_folder))
+                full_sample_path = "{}/{}/{}".format(train_data_folder_path, sub_folder, sample)
+                loaded_sample = pd.read_csv(full_sample_path)
+                self.data_sets.append((self.preprocessor.preprocess_train(loaded_sample)
+                                       , train_data_folder_path, sub_folder, sample))
 
     def train(self, model, model_save_folder_path):
         history_dic = {}
@@ -34,7 +40,7 @@ class Trainer(object):
             model_to_train = model.get_model()
             model_save_path =  "{}/{}".format(model_save_folder_path, dataset[2])
             create_folder(model_save_path)
-            file_path = "{}/{}".format(model_save_path, "weights_base.best.hdf5")
+            file_path = "{}/{}".format(model_save_path, dataset[3]+"_"+self.global_config.model_save_name)
             # check point
             checkpoint = ModelCheckpoint(file_path, monitor='val_loss', verbose=1, save_best_only=True, mode='min')
             early = EarlyStopping(monitor="val_loss", mode="min", patience=self.global_config.patience)
@@ -46,6 +52,7 @@ class Trainer(object):
 
 if __name__ == '__main__':
     trainer = Trainer()
+    output_path = './training_demo_output'
     trainer.load_data('./preprocessing_wrapper_demo_output')
-    history_dic = trainer.train(Bidirectional_LSTM_Model(), './training_demo_output')
+    history_dic = trainer.train(Bidirectional_LSTM_Model(), output_path)
     print(history_dic)

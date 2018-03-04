@@ -1,5 +1,5 @@
 
-from basemodel import BaseModel
+from src.train.abstract_model import BaseModel
 from keras.models import Model
 from keras.layers import Dense, Embedding, Input
 from keras.layers import LSTM, Bidirectional, GlobalMaxPool1D, Dropout

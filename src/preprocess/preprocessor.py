@@ -2,33 +2,38 @@
 from keras.preprocessing import text, sequence
 import pandas as pd
 from src.config.static_config import StaticConfig
-from src.utils.io import create_folder
-
+from src.utils.utils import create_folder
+import pickle
 class SeqProcessor(object):
 
-    def __init__(self):
+    def __init__(self, tokenizer = None):
         self.global_config = StaticConfig()
-        self.tokenizer = text.Tokenizer(num_words=self.global_config.max_features)
+        self.tokenizer = tokenizer
+
+    def set_tokenizer(self, tok):
+        self.tokenizer = tok
 
     def extract_y(self, train):
         list_classes = ["toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"]
-        return train[list_classes].values
+        return train[list_classes]
 
-    def extract_x_train(self, train):
+    def extract_x(self, train):
         list_sentences_train = train["comment_text"].fillna("CVxTz").values
-        self.tokenizer.fit_on_texts(list(list_sentences_train))
         list_tokenized_train = self.tokenizer.texts_to_sequences(list_sentences_train)
         return sequence.pad_sequences(list_tokenized_train, maxlen=self.global_config.maxlen)
 
 
     def preprocess_train(self, train):
-        train = train.sample(frac=1)
-        return (self.extract_x_train(train), self.extract_y(train))
+        # train = train.sample(frac=1)
+        return (self.extract_x(train), self.extract_y(train))
 
     def preprocess_test(self,test):
-        list_sentences_test = test["comment_text"].fillna("CVxTz").values
-        list_tokenized_test = self.tokenizer.texts_to_sequences(list_sentences_test)
-        return sequence.pad_sequences(list_tokenized_test, maxlen=self.global_config.maxlen)
+        # create_folder(model_save_folder_path)
+        # create_folder("{}/{}".format(model_save_folder_path, sub_folder))
+        # tokenizer_save_path = "{}/{}/{}".format(model_save_folder_path, sub_folder,sample+"_"+
+        #                                         self.global_config.tokenizer_save_name)
+        # pickle.dump(self.tokenizer, open(tokenizer_save_path, "wb"))
+        return self.extract_x(test)
 
     def prepare_data_folder(self, train_input_path, output_folder_path, train_test_factor=1.0, debug_factor=1.0):
         '''
@@ -51,21 +56,27 @@ class SeqProcessor(object):
         create_folder(output_folder_path)
         label_cols = ['id', 'comment_text', 'toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
         raw_data = pd.read_csv(train_input_path)
+        raw_data = raw_data.sample(frac=1)
+        self.tokenizer = text.Tokenizer(num_words=self.global_config.max_features)
+        list_sentences_raw_data = raw_data["comment_text"].fillna("CVxTz").values
+        self.tokenizer.fit_on_texts(list(list_sentences_raw_data))
+        pickle.dump(self.tokenizer, open('{}/{}'.format(output_folder_path, self.global_config.tokenizer_save_name), "wb"))
+
 
         train_data_size = int(raw_data.shape[0] * train_test_factor * debug_factor)
         train = pd.DataFrame(raw_data[:train_data_size],columns = label_cols)
 
-        # test = pd.DataFrame(raw_data[train_data_size:] if debug_factor == 1.0 else raw_data[-100:],columns = label_cols)
-        # test_name = "{}/{}".format(output_folder_path,"test.csv")
-        # test.to_csv(test_name)
-
+        test = pd.DataFrame(raw_data[train_data_size:] if debug_factor == 1.0 else raw_data[-100:])
+        test_name = "{}/{}".format(output_folder_path,"test.csv")
+        test.to_csv(test_name)
 
         for label_name in global_config.labels:
             label_output = output_folder_path +"/"+ label_name
             create_folder(label_output)
             positive_train = train[train[label_name]>0]
             if positive_train.shape[0] == 0:
-                return
+                print ('positive_train.shape[0] == 0 for ', label_name)
+                continue
             negative_train = train[train[label_name] == 0]
             ratio = negative_train.shape[0]/positive_train.shape[0]
             slice_size = positive_train.shape[0]
