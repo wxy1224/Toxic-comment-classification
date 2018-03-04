@@ -5,7 +5,7 @@ import os
 def is_dir_exist(path):
     return isdir(path)
 
-def list_folders(mypath):
+def list_files_under_folder(mypath):
     return [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
 def create_folder(path):

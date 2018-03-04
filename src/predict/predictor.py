@@ -3,7 +3,7 @@ from src.config.static_config import StaticConfig
 from src.train.bidirectional_lstm_model import Bidirectional_LSTM_Model
 import pandas as pd
 import pickle
-from src.utils.utils import list_folders, create_folder, is_dir_exist
+from src.utils.utils import list_files_under_folder, create_folder, is_dir_exist
 
 class Predictor(object):
     def __init__(self):
@@ -42,7 +42,7 @@ class Predictor(object):
         print('model_path', model_path)
         if not is_dir_exist(model_path):
             return None
-        model_names = list_folders(model_path)
+        model_names = list_files_under_folder(model_path)
         print('model_names', model_names)
         y_test_list = []
         model_folder = prediction_save_path + "/" + folder_name
