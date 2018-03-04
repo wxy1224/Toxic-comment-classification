@@ -81,18 +81,33 @@ class SeqProcessor(object):
                 continue
             negative_train = train[train[label_name] == 0]
             ratio = negative_train.shape[0]/positive_train.shape[0]
-            slice_size = positive_train.shape[0]
-            for i in range(int(ratio)):
 
-                sub_train_df = positive_train
 
-                sub_test_df = negative_train[(slice_size*i):(slice_size*(i+1))]
+            negative_train.sample(frac=(1.0/ratio)).reset_index(drop=True)
+            #
+            sub_train_df = positive_train
 
-                sub_train_df = pd.concat([sub_train_df, sub_test_df], ignore_index=True)
-                sub_train_df = sub_train_df.sample(frac=1).reset_index(drop=True)
-                sub_train_output_file_path = '{}/tr_train_{}.csv'.format(label_output, i)
-                sub_train_df.to_csv(sub_train_output_file_path)#, index=False)
-                print ('output subset {} to file '.format(i, sub_train_output_file_path))
+            sub_test_df = negative_train#[(slice_size*i):(slice_size*(i+1))]
+
+            sub_train_df = pd.concat([sub_train_df, sub_test_df], ignore_index=True)
+            sub_train_df = sub_train_df.sample(frac=1).reset_index(drop=True)
+            sub_train_output_file_path = '{}/tr_train_{}.csv'.format(label_output, ratio)
+            sub_train_df.to_csv(sub_train_output_file_path)#, index=False)
+            print ('output negative ratio {} subset to file '.format(ratio, sub_train_output_file_path))
+
+
+            # slice_size = positive_train.shape[0]
+            # for i in range(int(ratio)):
+            #
+            #     sub_train_df = positive_train
+            #
+            #     sub_test_df = negative_train[(slice_size*i):(slice_size*(i+1))]
+            #
+            #     sub_train_df = pd.concat([sub_train_df, sub_test_df], ignore_index=True)
+            #     sub_train_df = sub_train_df.sample(frac=1).reset_index(drop=True)
+            #     sub_train_output_file_path = '{}/tr_train_{}.csv'.format(label_output, i)
+            #     sub_train_df.to_csv(sub_train_output_file_path)#, index=False)
+            #     print ('output subset {} to file '.format(i, sub_train_output_file_path))
 
 
 if __name__ == "__main__":

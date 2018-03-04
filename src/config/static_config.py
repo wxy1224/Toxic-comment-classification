@@ -2,9 +2,9 @@
 
 class StaticConfig:
     labels = ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
-    max_features = 30000
+    max_features = 50000
     maxlen = 100
-    patience = 10
+    patience = 20
     validation_split = 0.1
     model_save_name = "weights_base.best.hdf5"
     tokenizer_save_name = "tokenizer_save.p"
@@ -14,5 +14,6 @@ class StaticConfig:
     ensembled_predict_file_name = "ensembled_predict_file.csv"
     is_debug = True
     auc_file_name = "auc.json"
+    lstm_embed_size = 35
 
 
