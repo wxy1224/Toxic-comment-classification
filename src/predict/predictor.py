@@ -59,10 +59,12 @@ class Predictor(object):
         y_test_list = []
         model_folder = prediction_save_path + "/" + folder_name
         create_folder(model_folder)
+
         for model_name in model_names:
             one_model_path = model_path+"/"+model_name
-            empty_model_object.load_weights(one_model_path)
-            y_test = empty_model_object.predict(x_test)
+            new_model = empty_model_object.get_model()
+            new_model.load_weights(one_model_path)
+            y_test = new_model.predict(x_test)
 
             save_path_for_one = model_folder +"/"+model_name+"_"+self.global_config.predict_save_name
             pd.DataFrame(y_test,columns=self.global_config.labels).to_csv(save_path_for_one)
