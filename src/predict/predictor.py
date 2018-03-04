@@ -18,14 +18,14 @@ class Predictor(object):
         self.preprocessor = SeqProcessor(tokenizer)
 
     def predict(self, empty_model_object, models_parent_folder_path, prediction_save_path):
+        print("##################### predict starts ########################")
         original_labels = self.preprocessor.extract_y(self.x_test)
         create_folder(prediction_save_path)
-        if self.global_config.is_debug:
-            original_labels.to_csv("{}/{}".format(prediction_save_path, self.global_config.original_label_file_name))
+        original_labels.to_csv("{}/{}".format(prediction_save_path, self.global_config.original_label_file_name))
         predict = None
 
         for folder_name in self.global_config.labels:
-
+            print("processing ",folder_name)
             x_test = self.preprocessor.preprocess_train(self.x_test)
             predict_for_model = self.predict_for_model_under_same_folder(empty_model_object, models_parent_folder_path, folder_name, prediction_save_path, x_test[0])
             if predict_for_model is None:
@@ -36,14 +36,14 @@ class Predictor(object):
                 predict[folder_name] = predict_for_model[folder_name]
 
         predict.to_csv("{}/{}".format(prediction_save_path, self.global_config.ensembled_predict_file_name))
+        print("##################### predict ends ########################")
 
     def predict_for_model_under_same_folder(self, empty_model_object, models_folder,folder_name, prediction_save_path, x_test):
         model_path = "{}/{}".format(models_folder, folder_name)
-        print('model_path', model_path)
+        print('predict_for_model_under_same_folder model_path', model_path)
         if not is_dir_exist(model_path):
             return None
         model_names = list_files_under_folder(model_path)
-        print('model_names', model_names)
         y_test_list = []
         model_folder = prediction_save_path + "/" + folder_name
         create_folder(model_folder)
@@ -53,10 +53,8 @@ class Predictor(object):
             y_test = empty_model_object.predict(x_test)
 
             save_path_for_one = model_folder +"/"+model_name+"_"+self.global_config.predict_save_name
-            if self.global_config.is_debug:
-                pd.DataFrame(y_test,columns=self.global_config.labels).to_csv(save_path_for_one)
+            pd.DataFrame(y_test,columns=self.global_config.labels).to_csv(save_path_for_one)
             y_test_list.append(y_test)
-        print('y_test_list', y_test_list)
         average_y_test = None
         for y_test in y_test_list:
             if average_y_test is None:
@@ -66,9 +64,7 @@ class Predictor(object):
         average_y_test = average_y_test*1.0/len(y_test_list)
         save_path_for_average = model_folder +"/"+self.global_config.average_predict_save_name
         average_df = pd.DataFrame(average_y_test, columns = self.global_config.labels)
-        if self.global_config.is_debug:
-            average_df.to_csv(save_path_for_average)
-        print('average_df', average_df)
+        average_df.to_csv(save_path_for_average)
         return average_df
 
 

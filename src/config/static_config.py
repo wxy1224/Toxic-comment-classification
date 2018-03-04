@@ -4,7 +4,7 @@ class StaticConfig:
     labels = ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
     max_features = 30000
     maxlen = 100
-    patience = 20
+    patience = 10
     validation_split = 0.1
     model_save_name = "weights_base.best.hdf5"
     tokenizer_save_name = "tokenizer_save.p"

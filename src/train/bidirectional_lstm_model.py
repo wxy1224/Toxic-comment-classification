@@ -24,5 +24,5 @@ class Bidirectional_LSTM_Model(BaseModel):
         model.compile(loss='binary_crossentropy',
                       optimizer='adam',
                       metrics=['accuracy'])
-        print(model.summary())
+        # print(model.summary())
         return model

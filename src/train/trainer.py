@@ -31,6 +31,7 @@ class Trainer(object):
                                        , train_data_folder_path, sub_folder, sample))
 
     def train(self, model, model_save_folder_path):
+        print("##################### training starts ########################")
         history_dic = {}
         create_folder(model_save_folder_path)
         for dataset in self.data_sets:
@@ -47,7 +48,9 @@ class Trainer(object):
             callbacks_list = [checkpoint, early]
 
             hist = model_to_train.fit(x_train, y, batch_size=batch_size, epochs=epochs, validation_split=self.global_config.validation_split, callbacks=callbacks_list)
+            print(hist)
             history_dic[dataset[2]] = hist
+        print("##################### training ends ########################")
         return history_dic
 
 if __name__ == '__main__':

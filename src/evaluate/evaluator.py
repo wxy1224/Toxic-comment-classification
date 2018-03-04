@@ -38,7 +38,7 @@ class Evaluator(object):
             outfile.write(json_str)
 
     def evaluate(self, predict_folder_path, evaluation_folder_path):
-
+        print("##################### evaluation starts ########################")
         create_folder(evaluation_folder_path)
         self.compute_auc( predict_folder_path, self.global_config.ensembled_predict_file_name,
                          evaluation_folder_path)
@@ -52,7 +52,7 @@ class Evaluator(object):
             files_to_eval = list_files_under_folder(curr_predict_folder_path)
             for file_name in files_to_eval:
                 self.compute_auc(curr_predict_folder_path, file_name, curr_eval_folder_path)
-
+        print("##################### evaluation ends ########################")
 if __name__ == '__main__':
     predict_folder_path = "./predict_demo_output/"
 

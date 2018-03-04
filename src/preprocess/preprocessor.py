@@ -53,6 +53,7 @@ class SeqProcessor(object):
         :param debug_factor: if run with this config, only sample a small proportion of the raw data. 1.0 means no debug
         :return:
         '''
+        print("##################### preprocessor starts ########################")
         global_config = StaticConfig()
         create_folder(output_folder_path)
         label_cols = ['id', 'comment_text', 'toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
