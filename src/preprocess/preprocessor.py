@@ -23,10 +23,12 @@ class SeqProcessor(object):
         return sequence.pad_sequences(list_tokenized_train, maxlen=self.global_config.maxlen)
 
 
-    def preprocess_train(self, train):
+    def preprocess_train(self, train, submission=False):
         # train = train.sample(frac=1)
-        return (self.extract_x(train), self.extract_y(train))
-
+        if not submission:
+            return (self.extract_x(train), self.extract_y(train))
+        else:
+            return (self.extract_x(train),None)
     def preprocess_test(self,test):
         # create_folder(model_save_folder_path)
         # create_folder("{}/{}".format(model_save_folder_path, sub_folder))
@@ -83,8 +85,7 @@ class SeqProcessor(object):
             ratio = negative_train.shape[0]/positive_train.shape[0]
 
 
-            negative_train.sample(frac=(1.0/ratio)).reset_index(drop=True)
-            #
+            # # no sampling with shuffle
             sub_train_df = positive_train
 
             sub_test_df = negative_train#[(slice_size*i):(slice_size*(i+1))]
@@ -95,7 +96,21 @@ class SeqProcessor(object):
             sub_train_df.to_csv(sub_train_output_file_path)#, index=False)
             print ('output negative ratio {} subset to file '.format(ratio, sub_train_output_file_path))
 
+            # # rebalancing sampling with limited time
+            # slice_size = positive_train.shape[0]
+            # for i in range(self.global_config.data_balancing_sampling_attempt):
+            #
+            #     sub_train_df = positive_train
+            #
+            #     sub_test_df = negative_train.sample(frac=(1.0/ratio)).reset_index(drop=True)
+            #
+            #     sub_train_df = pd.concat([sub_train_df, sub_test_df], ignore_index=True)
+            #     sub_train_df = sub_train_df.sample(frac=1).reset_index(drop=True)
+            #     sub_train_output_file_path = '{}/tr_train_{}.csv'.format(label_output, i)
+            #     sub_train_df.to_csv(sub_train_output_file_path)#, index=False)
+            #     print ('output subset {} to file '.format(i, sub_train_output_file_path))
 
+            # full rebalancing sampling using all data
             # slice_size = positive_train.shape[0]
             # for i in range(int(ratio)):
             #

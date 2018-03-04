@@ -16,7 +16,7 @@ class Trainer(object):
 
 
 
-    def load_data(self, train_data_folder_path):
+    def load_data(self, train_data_folder_path, submission=False):
         tokenizer = pickle.load(open('{}/{}'.format(train_data_folder_path, self.global_config.tokenizer_save_name)
                 , "rb"))
         self.preprocessor = SeqProcessor(tokenizer)
@@ -27,7 +27,7 @@ class Trainer(object):
             for sample in samples:
                 full_sample_path = "{}/{}/{}".format(train_data_folder_path, sub_folder, sample)
                 loaded_sample = pd.read_csv(full_sample_path)
-                self.data_sets.append((self.preprocessor.preprocess_train(loaded_sample)
+                self.data_sets.append((self.preprocessor.preprocess_train(loaded_sample, submission)
                                        , train_data_folder_path, sub_folder, sample))
 
     def train(self, model, model_save_folder_path):
