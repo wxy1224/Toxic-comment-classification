@@ -20,9 +20,9 @@ class Predictor(object):
     def predict(self, empty_model_object, models_parent_folder_path, prediction_save_path, submission=False
                 , load_sample_submission_file_path=None):
         print("##################### predict starts ########################")
+        create_folder(prediction_save_path)
         if not submission:
             original_labels = self.preprocessor.extract_y(self.x_test)
-            create_folder(prediction_save_path)
             original_labels.to_csv("{}/{}".format(prediction_save_path, self.global_config.original_label_file_name))
         predict = None
 

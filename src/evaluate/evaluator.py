@@ -31,7 +31,7 @@ class Evaluator(object):
 
         predict = pd.read_csv("{}/{}".format(predict_folder_path, predict_file_name))
 
-        with open('{}/{}'.format(evaluation_folder_path, predict_file_name + ":" + self.global_config.auc_file_name), 'w') as outfile:
+        with open('{}/{}'.format(evaluation_folder_path, predict_file_name + "__" + self.global_config.auc_file_name), 'w') as outfile:
             output =self.auc(self.label, predict)
             # json.dump(output, outfile, ensure_ascii=False)
             json_str = json.dumps(output)
