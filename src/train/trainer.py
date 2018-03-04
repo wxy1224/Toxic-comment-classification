@@ -56,6 +56,6 @@ class Trainer(object):
 if __name__ == '__main__':
     trainer = Trainer()
     output_path = './training_demo_output'
-    trainer.load_data('./preprocessing_wrapper_demo_output')
+    trainer.load_data('./preprocessing_wrapper_demo_output_0')
     history_dic = trainer.train(Bidirectional_LSTM_Model(), output_path)
     print(history_dic)
