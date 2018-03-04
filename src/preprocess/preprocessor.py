@@ -35,7 +35,8 @@ class SeqProcessor(object):
         # pickle.dump(self.tokenizer, open(tokenizer_save_path, "wb"))
         return self.extract_x(test)
 
-    def prepare_data_folder(self, train_input_path, output_folder_path, train_test_factor=1.0, debug_factor=1.0):
+    # def prepare_data_folder(self, train_input_path, output_folder_path, train_test_factor=1.0, debug_factor=1.0):
+    def prepare_data_folder(self, train_input_path, output_folder_path, train_test_factor=0.9, debug_factor=1.0):
         '''
         This method will take the train data and then divide it into train and test sets by a factor of train_test_factor.
         Then the train dataset is splitted according the column name first.
@@ -95,5 +96,6 @@ class SeqProcessor(object):
 
 if __name__ == "__main__":
     wrapper = SeqProcessor()
-    wrapper.prepare_data_folder('./input/train.csv', './preprocessing_wrapper_demo_output',debug_factor=0.0001)
+    wrapper.prepare_data_folder('./input/train.csv', './preprocessing_wrapper_demo_output', debug_factor=1.0)
+
 
