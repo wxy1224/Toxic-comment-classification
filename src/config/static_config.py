@@ -13,5 +13,6 @@ class StaticConfig:
     average_predict_save_name = "average_predict_save.csv"
     ensembled_predict_file_name = "ensembled_predict_file.csv"
     is_debug = True
+    auc_file_name = "auc.json"
 
 

@@ -1,5 +1,5 @@
 from src.config.static_config import StaticConfig
-from src.utils.utils import list_folders, create_folder
+from src.utils.utils import list_files_under_folder, create_folder
 import pandas as pd
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from src.preprocess.preprocessor import SeqProcessor
@@ -21,7 +21,7 @@ class Trainer(object):
                 , "rb"))
         self.preprocessor = SeqProcessor(tokenizer)
         for sub_folder in self.global_config.labels:
-            samples = list_folders("{}/{}/".format(train_data_folder_path, sub_folder))
+            samples = list_files_under_folder("{}/{}/".format(train_data_folder_path, sub_folder))
             if len(samples) == 0:
                 continue
             for sample in samples:
