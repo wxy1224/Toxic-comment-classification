@@ -74,27 +74,29 @@ class SeqProcessor(object):
         test_name = "{}/{}".format(output_folder_path,"test.csv")
         test.to_csv(test_name)
 
-        for label_name in global_config.labels:
+        for label_name in global_config.model_names:
             label_output = output_folder_path +"/"+ label_name
             create_folder(label_output)
-            positive_train = train[train[label_name]>0]
-            if positive_train.shape[0] == 0:
-                print ('positive_train.shape[0] == 0 for ', label_name)
-                continue
-            negative_train = train[train[label_name] == 0]
-            ratio = negative_train.shape[0]/positive_train.shape[0]
-
-
-            # # no sampling with shuffle
-            sub_train_df = positive_train
-
-            sub_test_df = negative_train#[(slice_size*i):(slice_size*(i+1))]
-
-            sub_train_df = pd.concat([sub_train_df, sub_test_df], ignore_index=True)
-            sub_train_df = sub_train_df.sample(frac=1).reset_index(drop=True)
-            sub_train_output_file_path = '{}/tr_train_{}.csv'.format(label_output, ratio)
-            sub_train_df.to_csv(sub_train_output_file_path)#, index=False)
-            print ('output negative ratio {} subset to file '.format(ratio, sub_train_output_file_path))
+            # positive_train = train[train[label_name]>0]
+            # if positive_train.shape[0] == 0:
+            #     print ('positive_train.shape[0] == 0 for ', label_name)
+            #     continue
+            # negative_train = train[train[label_name] == 0]
+            # ratio = negative_train.shape[0]/positive_train.shape[0]
+            #
+            #
+            # # # no sampling with shuffle
+            # sub_train_df = positive_train
+            #
+            # sub_test_df = negative_train#[(slice_size*i):(slice_size*(i+1))]
+            #
+            # sub_train_df = pd.concat([sub_train_df, sub_test_df], ignore_index=True)
+            # sub_train_df = sub_train_df.sample(frac=1).reset_index(drop=True)
+            # sub_train_output_file_path = '{}/tr_train_{}.csv'.format(label_output, ratio)
+            # sub_train_df.to_csv(sub_train_output_file_path)#, index=False)
+            sub_train_output_file_path = '{}/tr_train_{}.csv'.format(label_output, label_name)
+            train.to_csv(sub_train_output_file_path)  # , index=False)
+            print ('output train for No. {} subset to file '.format(label_name, sub_train_output_file_path))
 
             # # rebalancing sampling with limited time
             # slice_size = positive_train.shape[0]
@@ -127,6 +129,6 @@ class SeqProcessor(object):
 
 if __name__ == "__main__":
     wrapper = SeqProcessor()
-    wrapper.prepare_data_folder('./input/train.csv', './preprocessing_wrapper_demo_output', debug_factor=1.0)
+    wrapper.prepare_data_folder('./input/train.csv', './preprocessing_wrapper_demo_output', debug_factor=1)
 
 

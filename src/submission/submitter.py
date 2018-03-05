@@ -12,7 +12,7 @@ class Submitter(object):
     def load_data(self):
         self.predictor.load_data('./input/test.csv', "./preprocessing_wrapper_demo_output_0/")
     def submit(self):
-        self.predictor.predict(Bidirectional_LSTM_Model().get_model(), './training_demo_output_0',
+        self.predictor.predict(Bidirectional_LSTM_Model(), './training_demo_output_0',
                                './submit_demo_output_0', submission=True, load_sample_submission_file_path='./input/sample_submission.csv')
 
 

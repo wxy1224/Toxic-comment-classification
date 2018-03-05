@@ -26,21 +26,21 @@ class Predictor(object):
             original_labels.to_csv("{}/{}".format(prediction_save_path, self.global_config.original_label_file_name))
         predict = None
 
-        for folder_name in self.global_config.labels:
+        for folder_name in self.global_config.model_names:
             print("processing ",folder_name)
             x_test = self.preprocessor.preprocess_train(self.x_test, submission)
-            predict_for_model = self.predict_for_model_under_same_folder(empty_model_object.get_model(), models_parent_folder_path, folder_name, prediction_save_path, x_test[0])
+            predict_for_model = self.predict_for_model_under_same_folder(empty_model_object.get_model(folder_name), models_parent_folder_path, folder_name, prediction_save_path, x_test[0])
             if predict_for_model is None:
                 continue
             if predict is None:
                 predict = predict_for_model
             else:
-                if self.global_config.enable_rebalancing_sampling:
-                    predict[folder_name] = predict_for_model[folder_name]
-                else:
-                    predict += predict_for_model
-        if not self.global_config.enable_rebalancing_sampling:
-            predict = predict/len(self.global_config.labels)
+                # if self.global_config.enable_rebalancing_sampling:
+                #     predict[folder_name] = predict_for_model[folder_name]
+                # else:
+                predict += predict_for_model
+        # if not self.global_config.enable_rebalancing_sampling:
+        predict = predict/len(self.global_config.labels)
 
         if submission:
             sample = pd.read_csv(load_sample_submission_file_path)
@@ -62,7 +62,7 @@ class Predictor(object):
 
         for model_name in model_names:
             one_model_path = model_path+"/"+model_name
-            new_model = empty_model_object.get_model()
+            new_model = empty_model_object
             new_model.load_weights(one_model_path)
             y_test = new_model.predict(x_test)
 
@@ -72,14 +72,14 @@ class Predictor(object):
             if not self.global_config.enable_rebalancing_sampling:
                 break
         average_y_test = y_test_list[0]
-        if self.global_config.enable_rebalancing_sampling:
-            average_y_test = None
-            for y_test in y_test_list:
-                if average_y_test is None:
-                    average_y_test = y_test
-                else:
-                    average_y_test += y_test
-            average_y_test = average_y_test*1.0/len(y_test_list)
+        # if self.global_config.enable_rebalancing_sampling:
+        #     average_y_test = None
+        #     for y_test in y_test_list:
+        #         if average_y_test is None:
+        #             average_y_test = y_test
+        #         else:
+        #             average_y_test += y_test
+        #     average_y_test = average_y_test*1.0/len(y_test_list)
         save_path_for_average = model_folder +"/"+self.global_config.average_predict_save_name
         average_df = pd.DataFrame(average_y_test, columns = self.global_config.labels)
         average_df.to_csv(save_path_for_average)
@@ -90,5 +90,5 @@ class Predictor(object):
 
 if __name__ == '__main__':
     predictor = Predictor()
-    predictor.load_data('./preprocessing_wrapper_demo_output_0/test.csv', "./preprocessing_wrapper_demo_output_0/")
+    predictor.load_data('./preprocessing_wrapper_demo_output/test.csv', "./preprocessing_wrapper_demo_output/")
     predictor.predict(Bidirectional_LSTM_Model(), './training_demo_output','./predict_demo_output')

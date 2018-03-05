@@ -2,6 +2,7 @@
 
 class StaticConfig:
     labels = ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
+    model_names = ["{}".format(i) for i in range(18)]
     max_features = 50000
     maxlen = 100
     patience = 20

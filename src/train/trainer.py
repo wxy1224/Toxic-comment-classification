@@ -20,7 +20,7 @@ class Trainer(object):
         tokenizer = pickle.load(open('{}/{}'.format(train_data_folder_path, self.global_config.tokenizer_save_name)
                 , "rb"))
         self.preprocessor = SeqProcessor(tokenizer)
-        for sub_folder in self.global_config.labels:
+        for sub_folder in self.global_config.model_names:
             samples = list_files_under_folder("{}/{}/".format(train_data_folder_path, sub_folder))
             if len(samples) == 0:
                 continue
@@ -38,7 +38,7 @@ class Trainer(object):
             x_train, y = dataset[0]
             batch_size = 32
             epochs = 2
-            model_to_train = model.get_model()
+            model_to_train = model.get_model(dataset[2])
             model_save_path =  "{}/{}".format(model_save_folder_path, dataset[2])
             create_folder(model_save_path)
             file_path = "{}/{}".format(model_save_path, dataset[3]+"_"+self.global_config.model_save_name)
@@ -56,6 +56,6 @@ class Trainer(object):
 if __name__ == '__main__':
     trainer = Trainer()
     output_path = './training_demo_output'
-    trainer.load_data('./preprocessing_wrapper_demo_output_0')
+    trainer.load_data('./preprocessing_wrapper_demo_output')
     history_dic = trainer.train(Bidirectional_LSTM_Model(), output_path)
     print(history_dic)

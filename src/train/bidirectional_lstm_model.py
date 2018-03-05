@@ -6,31 +6,36 @@ from keras.layers import LSTM, Bidirectional, GlobalMaxPool1D, Dropout
 from keras.preprocessing import text, sequence
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from src.config.static_config import StaticConfig
+from src.config.dynamic_config import DynamicConfig
 from keras import metrics
 class Bidirectional_LSTM_Model(BaseModel):
     def __init__(self):
         # self._model = None
         self.global_config = StaticConfig()
-        self.num_called = 0
+        self.dynamic_config = DynamicConfig()
+        # self.num_called = 0
 
-    def get_model(self, lstm_length=50, dense_dim=30, drop_out = 0.1):
+    def get_model(self, count, lstm_length=50, dense_dim=30, drop_out = 0.1):
         # if not self._model is None:
         #     return self._model
-        if self.num_called == 1:
-            lstm_length = 35
-        elif self.num_called == 2:
-            lstm_length = 75
-        elif self.num_called == 3:
-            dense_dim = 50
-        elif self.num_called == 4:
-            dense_dim = 70
-        elif self.num_called == 5:
-            self.drop_out = 0.5
-        self.num_called += 1
-
+        # if self.num_called == 1:
+        #     lstm_length = 35
+        # elif self.num_called == 2:
+        #     lstm_length = 75
+        # elif self.num_called == 3:
+        #     dense_dim = 50
+        # elif self.num_called == 4:
+        #     dense_dim = 70
+        # elif self.num_called == 5:
+        #     self.drop_out = 0.5
+        # self.num_called += 1
+        lstm_length = self.dynamic_config.config[count]['lstm_length']
+        dense_dim = self.dynamic_config.config[count]['dense_dim']
+        drop_out = self.dynamic_config.config[count]['drop_out']
         embed_size = self.global_config.lstm_embed_size
         max_features = self.global_config.max_features
         maxlen = self.global_config.maxlen
+
         inp = Input(shape=(maxlen,))
         x = Embedding(max_features, embed_size)(inp)
         x = Bidirectional(LSTM(lstm_length, return_sequences=True))(x)
