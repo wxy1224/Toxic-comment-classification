@@ -129,6 +129,6 @@ class SeqProcessor(object):
 
 if __name__ == "__main__":
     wrapper = SeqProcessor()
-    wrapper.prepare_data_folder('./input/train.csv', './preprocessing_wrapper_demo_output', debug_factor=0.0001)
+    wrapper.prepare_data_folder('./input/train.csv', './preprocessing_wrapper_demo_output', debug_factor=1.0)
 
 
