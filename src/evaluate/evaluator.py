@@ -42,7 +42,7 @@ class Evaluator(object):
         create_folder(evaluation_folder_path)
         self.compute_auc( predict_folder_path, self.global_config.ensembled_predict_file_name,
                          evaluation_folder_path)
-        for label_name in self.global_config.labels:
+        for label_name in self.global_config.model_names:
 
             curr_predict_folder_path = "{}/{}".format(predict_folder_path, label_name)
             if not is_dir_exist(curr_predict_folder_path):

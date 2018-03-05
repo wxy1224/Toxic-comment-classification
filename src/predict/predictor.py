@@ -29,7 +29,9 @@ class Predictor(object):
         for folder_name in self.global_config.model_names:
             print("processing ",folder_name)
             x_test = self.preprocessor.preprocess_train(self.x_test, submission)
-            predict_for_model = self.predict_for_model_under_same_folder(empty_model_object.get_model(folder_name), models_parent_folder_path, folder_name, prediction_save_path, x_test[0])
+            predict_for_model = self.predict_for_model_under_same_folder(empty_model_object.get_model(folder_name),
+                                                                         models_parent_folder_path, folder_name,
+                                                                         prediction_save_path, x_test[0])
             if predict_for_model is None:
                 continue
             if predict is None:
@@ -80,9 +82,9 @@ class Predictor(object):
         #         else:
         #             average_y_test += y_test
         #     average_y_test = average_y_test*1.0/len(y_test_list)
-        save_path_for_average = model_folder +"/"+self.global_config.average_predict_save_name
+        # save_path_for_average = model_folder +"/"+self.global_config.average_predict_save_name
         average_df = pd.DataFrame(average_y_test, columns = self.global_config.labels)
-        average_df.to_csv(save_path_for_average)
+        # average_df.to_csv(save_path_for_average)
         return average_df
 
 

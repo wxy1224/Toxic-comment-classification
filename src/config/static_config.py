@@ -8,6 +8,7 @@ class StaticConfig:
     patience = 20
     validation_split = 0.1
     model_save_name = "weights_base.best.hdf5"
+    ensemble_model_save_name = "weights_ensemble.best.hdf5"
     tokenizer_save_name = "tokenizer_save.p"
     original_label_file_name = "original_label_save.csv"
     predict_save_name = "predict_save.csv"
@@ -19,5 +20,8 @@ class StaticConfig:
     lstm_embed_size = 35
     data_balancing_sampling_attempt = 5
     enable_rebalancing_sampling = False
+
+    batch_size = 32
+    epoches = 2
 
 

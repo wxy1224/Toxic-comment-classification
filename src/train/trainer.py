@@ -36,8 +36,8 @@ class Trainer(object):
         create_folder(model_save_folder_path)
         for dataset in self.data_sets:
             x_train, y = dataset[0]
-            batch_size = 32
-            epochs = 2
+            batch_size = self.global_config.batch_size
+            epochs = self.global_config.epoches
             model_to_train = model.get_model(dataset[2])
             model_save_path =  "{}/{}".format(model_save_folder_path, dataset[2])
             create_folder(model_save_path)
