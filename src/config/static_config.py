@@ -14,6 +14,7 @@ class StaticConfig:
     predict_save_name = "predict_save.csv"
     average_predict_save_name = "average_predict_save.csv"
     ensembled_predict_file_name = "ensembled_predict_file.csv"
+    neural_ensembled_predict_file_name = "neural_ensembled_predict_file.csv"
     ensembled_submission_file_name = "submission_predict_file.csv"
     is_debug = True
     auc_file_name = "auc.json"

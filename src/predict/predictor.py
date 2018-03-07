@@ -47,7 +47,7 @@ class Predictor(object):
         if submission:
             sample = pd.read_csv(load_sample_submission_file_path)
             sample[self.global_config.labels] = predict
-            sample.to_csv("{}/{}".format(prediction_save_path, self.global_config.ensembled_submission_file_name))
+            sample.to_csv("{}/{}".format(prediction_save_path, self.global_config.ensembled_submission_file_name), index=False)
         else:
             predict.to_csv("{}/{}".format(prediction_save_path, self.global_config.ensembled_predict_file_name))
         print("##################### predict ends ########################")
