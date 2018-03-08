@@ -55,6 +55,7 @@ class SeqProcessor(object):
         :param debug_factor: if run with this config, only sample a small proportion of the raw data. 1.0 means no debug
         :return:
         '''
+
         print("##################### preprocessor starts ########################")
         global_config = StaticConfig()
         create_folder(output_folder_path)
@@ -129,6 +130,7 @@ class SeqProcessor(object):
 
 if __name__ == "__main__":
     wrapper = SeqProcessor()
-    wrapper.prepare_data_folder('./input/train.csv', './preprocessing_wrapper_demo_output', debug_factor=1.0)
+    wrapper.prepare_data_folder('./input/train.csv', './preprocessing_wrapper_demo_output',
+                                train_test_factor = StaticConfig().train_test_factor, debug_factor=1.0)
 
 

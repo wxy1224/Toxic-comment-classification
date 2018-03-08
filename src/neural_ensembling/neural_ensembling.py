@@ -24,7 +24,7 @@ class NeuralEnsembler(object):
             curr_predict_folder_path = "{}/{}".format(submit_folder_path, model_name)
             if not is_dir_exist(curr_predict_folder_path):
                 continue
-            model_output_file = "{}/{}/{}".format(predict_output_path, model_name, self.global_config.average_predict_save_name)
+            model_output_file = "{}/{}/{}".format(predict_output_path, model_name, self.global_config.predict_save_name)
             self.existing_predicts.append(self.path_to_numpy_array(model_output_file))
             self.ensemble_raw_data = np.concatenate(self.existing_predicts, axis=-1)
 
@@ -51,6 +51,7 @@ class NeuralEnsembler(object):
 
     def ensembler_predict(self,ensemble_folder_path,load_sample_submission_file_path):
         print("##################### ensembler_predict starts ########################")
+        create_folder(ensemble_folder_path)
         keras_model = self.model.get_model()
         keras_model.load_weights("{}/{}".format(ensemble_folder_path, self.global_config.ensemble_model_save_name))
         y_test = keras_model.predict(self.ensemble_raw_data)
@@ -73,8 +74,11 @@ if __name__ == '__main__':
     predict_folder_path = './predict_demo_output'
     original_label_full_path = "{}/{}".format(predict_folder_path, "original_label_save.csv")
     ensembler = NeuralEnsembler(original_label_full_path)
-    ensembler.load_models_to_ensemble(submit_folder_path)
+
+    # ensembler.load_models_to_ensemble(predict_folder_path)
     # ensembler.train_ensembler(neural_ensemble_path)
+    #
+    ensembler.load_models_to_ensemble(submit_folder_path)
     ensembler.ensembler_predict(neural_ensemble_path, "./input/sample_submission.csv")
 
 

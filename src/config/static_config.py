@@ -2,7 +2,7 @@
 
 class StaticConfig:
     labels = ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
-    model_names = ["{}".format(i) for i in range(18)]
+    model_names = ["{}".format(i) for i in range(1)]
     max_features = 50000
     maxlen = 100
     patience = 20
@@ -21,8 +21,8 @@ class StaticConfig:
     lstm_embed_size = 35
     data_balancing_sampling_attempt = 5
     enable_rebalancing_sampling = False
-
+    train_test_factor = 0.9
     batch_size = 32
-    epoches = 2
+    epoches = 20
 
 

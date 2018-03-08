@@ -29,7 +29,7 @@ class Predictor(object):
         for folder_name in self.global_config.model_names:
             print("processing ",folder_name)
             x_test = self.preprocessor.preprocess_train(self.x_test, submission)
-            predict_for_model = self.predict_for_model_under_same_folder(empty_model_object.get_model(folder_name),
+            predict_for_model = self.predict_for_model_under_same_folder(empty_model_object.get_model(folder_name, self.preprocessor),
                                                                          models_parent_folder_path, folder_name,
                                                                          prediction_save_path, x_test[0])
             if predict_for_model is None:
@@ -48,6 +48,7 @@ class Predictor(object):
             sample = pd.read_csv(load_sample_submission_file_path)
             sample[self.global_config.labels] = predict
             sample.to_csv("{}/{}".format(prediction_save_path, self.global_config.ensembled_submission_file_name), index=False)
+
         else:
             predict.to_csv("{}/{}".format(prediction_save_path, self.global_config.ensembled_predict_file_name))
         print("##################### predict ends ########################")
@@ -68,7 +69,7 @@ class Predictor(object):
             new_model.load_weights(one_model_path)
             y_test = new_model.predict(x_test)
 
-            save_path_for_one = model_folder +"/"+model_name+"_"+self.global_config.predict_save_name
+            save_path_for_one = model_folder +"/"+self.global_config.predict_save_name
             pd.DataFrame(y_test,columns=self.global_config.labels).to_csv(save_path_for_one)
             y_test_list.append(y_test)
             if not self.global_config.enable_rebalancing_sampling:
