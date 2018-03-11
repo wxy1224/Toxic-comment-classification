@@ -1,4 +1,4 @@
- #!/usr/bin/env python -W ignore::DeprecationWarning
+# !/usr/bin/env python -W ignore::DeprecationWarning
 import pandas as pd, numpy as np
 import nltk
 from itertools import chain
@@ -6,65 +6,67 @@ import re
 import nltk
 import nltk.tag.stanford as st
 
+tagger = st.StanfordNERTagger(
+  '../../stanford-ner/classifiers/english.all.3class.distsim.crf.ser.gz',
+  '../../stanford-ner/stanford-ner.jar')
 
-tagger = st.StanfordNERTagger('../../stanford-ner/classifiers/english.all.3class.distsim.crf.ser.gz',
-               '../../stanford-ner/stanford-ner.jar') 
 
-def get_continuous_chunks(tag2,tagged_sent):
-    continuous_chunk = []
-    current_chunk = []
+def get_continuous_chunks(tag2, tagged_sent):
+  continuous_chunk = []
+  current_chunk = []
 
-    for token, tag in tagged_sent:
-    	if tag == tag2:
-        # if tag == "PERSON":
-            current_chunk.append((token, tag))
-        else:
-            if current_chunk: # if the current chunk is not empty
-                continuous_chunk.append(current_chunk)
-                current_chunk = []
-    # Flush the final current_chunk into the continuous_chunk, if any.
-    if current_chunk:
+  for token, tag in tagged_sent:
+    if tag == tag2:
+      # if tag == "PERSON":
+      current_chunk.append((token, tag))
+    else:
+      if current_chunk:  # if the current chunk is not empty
         continuous_chunk.append(current_chunk)
-    return continuous_chunk
+        current_chunk = []
+  # Flush the final current_chunk into the continuous_chunk, if any.
+  if current_chunk:
+    continuous_chunk.append(current_chunk)
+  return continuous_chunk
 
 
 def entity_list(train_file, label, tag, save_folder):
-	train = pd.read_csv(train_file)
-	# test = pd.read_csv('../input/test.csv')
-	# subm = pd.read_csv('../input/sample_submission.csv')
-	 
-	selected = train.loc[train[label]==1]
-	select_comments = selected["comment_text"]
-	comments = select_comments.as_matrix()
-	# r=tagger.tag('John Eid is studying at Stanford University in NY'.split())
-	# print(r)
-	names = []
-	count = 0
-	for comment in comments:
-		count+=1
-		# if count<200:
-		# 	continue
-		r=tagger.tag(comment.split())
-		c = get_continuous_chunks(tag,r)
-		c2 = [" ".join([token for token, tag in ne]) for ne in c]
-		names = names+c2	
-		if count%100 ==0:
-			# print(names)
-			namelist = names
-			names = []
-			filename = save_folder+'entity_'+str(count)+'.txt'
-			with open(filename, 'w') as file:
-				for item in namelist:
-					item = item.encode('utf-8').strip()
-		  			file.write("%s\n" % item)
+  train = pd.read_csv(train_file)
+  # test = pd.read_csv('../input/test.csv')
+  # subm = pd.read_csv('../input/sample_submission.csv')
+
+  selected = train.loc[train[label] == 1]
+  select_comments = selected["comment_text"]
+  comments = select_comments.as_matrix()
+  # r=tagger.tag('John Eid is studying at Stanford University in NY'.split())
+  # print(r)
+  names = []
+  count = 0
+  for comment in comments:
+    count += 1
+    # if count<200:
+    # 	continue
+    r = tagger.tag(comment.split())
+    c = get_continuous_chunks(tag, r)
+    c2 = [" ".join([token for token, tag in ne]) for ne in c]
+    names = names + c2
+    if count % 100 == 0:
+      # print(names)
+      namelist = names
+      names = []
+      filename = save_folder + 'entity_' + str(count) + '.txt'
+      with open(filename, 'w') as file:
+        for item in namelist:
+          item = item.encode('utf-8').strip()
+          file.write("%s\n" % item)
+
 
 if __name__ == '__main__':
-	# create_folder("/names/")
-	train_file = '../input/train.csv'
-	label = "identity_hate"
-	save_folder = "names/"
-	tag = "PERSON"
-	entity_list(train_file, label,tag, save_folder)
+  # create_folder("/names/")
+  train_file = '../input/train.csv'
+  label = "identity_hate"
+  save_folder = "names/"
+  tag = "PERSON"
+  entity_list(train_file, label, tag, save_folder)
 
 
 
@@ -155,9 +157,9 @@ if __name__ == '__main__':
 # tagger = pycrfsuite.Tagger()
 # tagger.open('conll2002-esp.crfsuite')
 
-#example_sent = test_sents[0]
+# example_sent = test_sents[0]
 # print(' '.join(sent2tokens(example_sent)))
-#print(example_sent)
+# print(example_sent)
 # sentence = "I am John from America"
 # # sentence = "La Coruna , 23 may ( EFECOM )" #comments[0]
 # sent1 = nltk.word_tokenize(sentence)
@@ -202,8 +204,3 @@ if __name__ == '__main__':
 
 # # Print unique entity names
 # print set(entity_names)
-
-
-
-
-
