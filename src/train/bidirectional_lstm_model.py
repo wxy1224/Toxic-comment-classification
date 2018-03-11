@@ -3,8 +3,6 @@ from src.train.abstract_model import BaseModel
 from keras.models import Model
 from keras.layers import Dense, Embedding, Input
 from keras.layers import LSTM, Bidirectional, GlobalMaxPool1D, Dropout
-from keras.preprocessing import text, sequence
-from keras.callbacks import EarlyStopping, ModelCheckpoint
 from src.config.static_config import StaticConfig
 from src.config.dynamic_config import DynamicConfig
 from keras import metrics
@@ -44,7 +42,8 @@ class Bidirectional_LSTM_Model(BaseModel):
         inp = Input(shape=(maxlen,))
         x = Embedding(max_features, embed_size)(inp)
         # x = Dropout(drop_out)(x)
-        regularizer =l2(self.global_config.l2_regularizer)
+        if self.global_config.l2_regularizer != 0.0:
+            regularizer = l2(self.global_config.l2_regularizer)
         x =Conv1D(filters,
                          kernel_size,
                          padding='valid',

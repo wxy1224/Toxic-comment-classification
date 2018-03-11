@@ -14,6 +14,7 @@ def augmentation(orig_tain_path, names_list_path, output_path,
   with codecs.open(names_list_path, encoding='utf-8') as file:
 
     names = file.readlines()
+    names = map(lambda x: x.strip(), names)
   # names = names.split("\n")
   n = len(names)
   print(names[0])

@@ -75,8 +75,18 @@ class Bidirectional_LSTM_Model_Pretrained_Embedding(BaseModel):
         x = Bidirectional(LSTM(maxlen, return_sequences=True, dropout=drop_out, recurrent_dropout=drop_out))(x)
         x = GlobalMaxPool1D()(x)
         x = Dropout(drop_out)(x)
-        regularizer = l2(self.global_config.l2_regularizer)
-        x = Dense(dense_dim, activation="relu", kernel_regularizer=regularizer)(x)
+        if self.global_config.l2_regularizer != 0.0:
+            regularizer = l2(self.global_config.l2_regularizer)
+            x = Dense(dense_dim, activation="relu", kernel_regularizer=regularizer)(x)
+        else:
+            x = Dense(dense_dim, activation="relu")(x)
+        x = Dropout(drop_out)(x)
+        if self.global_config.l2_regularizer != 0.0:
+            regularizer = l2(self.global_config.l2_regularizer)
+            x = Dense(dense_dim, activation="relu", kernel_regularizer=regularizer)(x)
+        else:
+            x = Dense(dense_dim, activation="relu")(x)
+
         x = Dropout(drop_out)(x)
         # x = Dense(dense_dim, activation="relu", kernel_regularizer=regularizer)(x)
         # x = Dropout(drop_out)(x)
