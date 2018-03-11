@@ -1,6 +1,7 @@
 from src.preprocess.preprocessor import SeqProcessor
 from src.config.static_config import StaticConfig
 from src.train.bidirectional_lstm_model import Bidirectional_LSTM_Model
+from src.train.pretrained_embedding_bidirectional_lstm_model import Bidirectional_LSTM_Model_Pretrained_Embedding
 import pandas as pd
 import pickle
 from src.utils.utils import list_files_under_folder, create_folder, is_dir_exist
@@ -29,8 +30,10 @@ class Predictor(object):
         for folder_name in self.global_config.model_names:
             print("processing ",folder_name)
             x_test = self.preprocessor.preprocess_train(self.x_test, submission)
-            predict_for_model = self.predict_for_model_under_same_folder(empty_model_object.get_model(folder_name, self.preprocessor),
-                                                                         models_parent_folder_path, folder_name,
+            predict_for_model = self.predict_for_model_under_same_folder(
+                empty_model_object.get_model(folder_name, preprocessor=self.preprocessor),
+                                                                         models_parent_folder_path,
+                                                                         folder_name,
                                                                          prediction_save_path, x_test[0])
             if predict_for_model is None:
                 continue
@@ -53,7 +56,11 @@ class Predictor(object):
             predict.to_csv("{}/{}".format(prediction_save_path, self.global_config.ensembled_predict_file_name))
         print("##################### predict ends ########################")
 
-    def predict_for_model_under_same_folder(self, empty_model_object, models_folder,folder_name, prediction_save_path, x_test):
+    def predict_for_model_under_same_folder(self,
+                                            empty_model_object,
+                                            models_folder,
+                                            folder_name,
+                                            prediction_save_path, x_test):
         model_path = "{}/{}".format(models_folder, folder_name)
         print('predict_for_model_under_same_folder model_path', model_path)
         if not is_dir_exist(model_path):
@@ -93,5 +100,7 @@ class Predictor(object):
 
 if __name__ == '__main__':
     predictor = Predictor()
+    # predictor.load_data('./input/test.csv', "./preprocessing_wrapper_demo_output/")
+
     predictor.load_data('./preprocessing_wrapper_demo_output/test.csv', "./preprocessing_wrapper_demo_output/")
-    predictor.predict(Bidirectional_LSTM_Model(), './training_demo_output','./predict_demo_output')
+    predictor.predict(Bidirectional_LSTM_Model_Pretrained_Embedding(), './training_demo_output','./predict_demo_output')
