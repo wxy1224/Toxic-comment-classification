@@ -65,6 +65,8 @@ if __name__ == '__main__':
   train_file = '../input/train.csv'
   label = "identity_hate"
   save_folder = "names/"
+  if not os.path.exists(save_folder):
+  	os.makedirs(save_folder)
   tag = "PERSON"
   entity_list(train_file, label, tag, save_folder)
 
