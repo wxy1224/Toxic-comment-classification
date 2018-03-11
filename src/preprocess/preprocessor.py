@@ -13,6 +13,61 @@ class SeqProcessor(object):
     def set_tokenizer(self, tok):
         self.tokenizer = tok
 
+    # The function "text_to_wordlist" is from
+    # https://www.kaggle.com/currie32/quora-question-pairs/the-importance-of-cleaning-text
+    def text_to_wordlist(text, remove_stopwords=False, stem_words=False):
+        # Clean the text, with the option to remove stopwords and to stem words.
+
+        # Convert words to lower case and split them
+        text = text.lower().split()
+
+        # Optionally, remove stop words
+        if remove_stopwords:
+            stops = set(stopwords.words("english"))
+            text = [w for w in text if not w in stops]
+
+        text = " ".join(text)
+
+        # Clean the text
+        text = re.sub(r"[^A-Za-z0-9^,!.\/'+-=]", " ", text)
+        text = re.sub(r"what's", "what is ", text)
+        text = re.sub(r"\'s", " ", text)
+        text = re.sub(r"\'ve", " have ", text)
+        text = re.sub(r"can't", "cannot ", text)
+        text = re.sub(r"n't", " not ", text)
+        text = re.sub(r"i'm", "i am ", text)
+        text = re.sub(r"\'re", " are ", text)
+        text = re.sub(r"\'d", " would ", text)
+        text = re.sub(r"\'ll", " will ", text)
+        text = re.sub(r",", " ", text)
+        text = re.sub(r"\.", " ", text)
+        text = re.sub(r"!", " ! ", text)
+        text = re.sub(r"\/", " ", text)
+        text = re.sub(r"\^", " ^ ", text)
+        text = re.sub(r"\+", " + ", text)
+        text = re.sub(r"\-", " - ", text)
+        text = re.sub(r"\=", " = ", text)
+        text = re.sub(r"'", " ", text)
+        text = re.sub(r"(\d+)(k)", r"\g<1>000", text)
+        text = re.sub(r":", " : ", text)
+        text = re.sub(r" e g ", " eg ", text)
+        text = re.sub(r" b g ", " bg ", text)
+        text = re.sub(r" u s ", " american ", text)
+        text = re.sub(r"\0s", "0", text)
+        text = re.sub(r" 9 11 ", "911", text)
+        text = re.sub(r"e - mail", "email", text)
+        text = re.sub(r"j k", "jk", text)
+        text = re.sub(r"\s{2,}", " ", text)
+
+        # Optionally, shorten words to their stems
+        if stem_words:
+            text = text.split()
+            stemmer = SnowballStemmer('english')
+            stemmed_words = [stemmer.stem(word) for word in text]
+            text = " ".join(stemmed_words)
+
+        # Return a list of words
+        return (text)
     def extract_y(self, train):
         list_classes = ["toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"]
         return train[list_classes]
@@ -71,61 +126,19 @@ class SeqProcessor(object):
         train_data_size = int(raw_data.shape[0] * train_test_factor * debug_factor)
         train = pd.DataFrame(raw_data[:train_data_size],columns = label_cols)
 
-        test = pd.DataFrame(raw_data[train_data_size:] if debug_factor == 1.0 else raw_data[-100:])
+        if self.global_config.use_raw_for_test:
+            test = pd.DataFrame(raw_data)
+        else:
+            test = pd.DataFrame(raw_data[train_data_size:] if debug_factor == 1.0 else raw_data[-100:])
         test_name = "{}/{}".format(output_folder_path,"test.csv")
         test.to_csv(test_name)
 
         for label_name in global_config.model_names:
             label_output = output_folder_path +"/"+ label_name
             create_folder(label_output)
-            # positive_train = train[train[label_name]>0]
-            # if positive_train.shape[0] == 0:
-            #     print ('positive_train.shape[0] == 0 for ', label_name)
-            #     continue
-            # negative_train = train[train[label_name] == 0]
-            # ratio = negative_train.shape[0]/positive_train.shape[0]
-            #
-            #
-            # # # no sampling with shuffle
-            # sub_train_df = positive_train
-            #
-            # sub_test_df = negative_train#[(slice_size*i):(slice_size*(i+1))]
-            #
-            # sub_train_df = pd.concat([sub_train_df, sub_test_df], ignore_index=True)
-            # sub_train_df = sub_train_df.sample(frac=1).reset_index(drop=True)
-            # sub_train_output_file_path = '{}/tr_train_{}.csv'.format(label_output, ratio)
-            # sub_train_df.to_csv(sub_train_output_file_path)#, index=False)
             sub_train_output_file_path = '{}/tr_train_{}.csv'.format(label_output, label_name)
             train.to_csv(sub_train_output_file_path)  # , index=False)
             print ('output train for No. {} subset to file '.format(label_name, sub_train_output_file_path))
-
-            # # rebalancing sampling with limited time
-            # slice_size = positive_train.shape[0]
-            # for i in range(self.global_config.data_balancing_sampling_attempt):
-            #
-            #     sub_train_df = positive_train
-            #
-            #     sub_test_df = negative_train.sample(frac=(1.0/ratio)).reset_index(drop=True)
-            #
-            #     sub_train_df = pd.concat([sub_train_df, sub_test_df], ignore_index=True)
-            #     sub_train_df = sub_train_df.sample(frac=1).reset_index(drop=True)
-            #     sub_train_output_file_path = '{}/tr_train_{}.csv'.format(label_output, i)
-            #     sub_train_df.to_csv(sub_train_output_file_path)#, index=False)
-            #     print ('output subset {} to file '.format(i, sub_train_output_file_path))
-
-            # full rebalancing sampling using all data
-            # slice_size = positive_train.shape[0]
-            # for i in range(int(ratio)):
-            #
-            #     sub_train_df = positive_train
-            #
-            #     sub_test_df = negative_train[(slice_size*i):(slice_size*(i+1))]
-            #
-            #     sub_train_df = pd.concat([sub_train_df, sub_test_df], ignore_index=True)
-            #     sub_train_df = sub_train_df.sample(frac=1).reset_index(drop=True)
-            #     sub_train_output_file_path = '{}/tr_train_{}.csv'.format(label_output, i)
-            #     sub_train_df.to_csv(sub_train_output_file_path)#, index=False)
-            #     print ('output subset {} to file '.format(i, sub_train_output_file_path))
 
 
 if __name__ == "__main__":

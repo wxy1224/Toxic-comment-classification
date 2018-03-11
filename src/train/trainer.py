@@ -4,6 +4,7 @@ import pandas as pd
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from src.preprocess.preprocessor import SeqProcessor
 from src.train.bidirectional_lstm_model import Bidirectional_LSTM_Model
+from src.train.pretrained_embedding_bidirectional_lstm_model import Bidirectional_LSTM_Model_Pretrained_Embedding
 
 
 import pickle
@@ -38,7 +39,7 @@ class Trainer(object):
             x_train, y = dataset[0]
             batch_size = self.global_config.batch_size
             epochs = self.global_config.epoches
-            model_to_train = model.get_model(dataset[2], self.preprocessor)
+            model_to_train = model.get_model(dataset[2], preprocessor=self.preprocessor)
             model_save_path =  "{}/{}".format(model_save_folder_path, dataset[2])
             create_folder(model_save_path)
             file_path = "{}/{}".format(model_save_path, dataset[3]+"_"+self.global_config.model_save_name)
@@ -57,5 +58,5 @@ if __name__ == '__main__':
     trainer = Trainer()
     output_path = './training_demo_output'
     trainer.load_data('./preprocessing_wrapper_demo_output')
-    history_dic = trainer.train(Bidirectional_LSTM_Model(), output_path)
+    history_dic = trainer.train(Bidirectional_LSTM_Model_Pretrained_Embedding(), output_path)
     print(history_dic)

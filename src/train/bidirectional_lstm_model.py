@@ -8,6 +8,8 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint
 from src.config.static_config import StaticConfig
 from src.config.dynamic_config import DynamicConfig
 from keras import metrics
+from keras.regularizers import l2
+from keras.layers import Conv1D, MaxPooling1D
 class Bidirectional_LSTM_Model(BaseModel):
     def __init__(self):
         # self._model = None
@@ -35,15 +37,26 @@ class Bidirectional_LSTM_Model(BaseModel):
         embed_size = self.global_config.lstm_embed_size
         max_features = self.global_config.max_features
         maxlen = self.global_config.maxlen
+        kernel_size = self.global_config.cnn_kernel_size
+        filters = self.global_config.cnn_filters
+        pool_size = self.global_config.cnn_pool_size
 
         inp = Input(shape=(maxlen,))
         x = Embedding(max_features, embed_size)(inp)
-        x = Bidirectional(LSTM(lstm_length, return_sequences=True))(x)
-        x = GlobalMaxPool1D()(x)
-        x = Dropout(drop_out)(x)
-        x = Dense(dense_dim, activation="relu")(x)
-        x = Dropout(drop_out)(x)
+        # x = Dropout(drop_out)(x)
+        regularizer =l2(self.global_config.l2_regularizer)
+        x =Conv1D(filters,
+                         kernel_size,
+                         padding='valid',
+                         activation='relu',
+                         strides=1)(x)
+        x = MaxPooling1D(pool_size=pool_size)(x)
+        x = Bidirectional(LSTM(lstm_length, return_sequences=True,dropout_U = drop_out, dropout_W = drop_out))(x)
+        # x = Dense(dense_dim, activation="relu", kernel_regularizer=regularizer)(x)
+        # x = Dropout(drop_out)(x)
         x = Dense(6, activation="sigmoid")(x)
+
+
         model = Model(inputs=inp, outputs=x)
         model.compile(loss='binary_crossentropy',
                       optimizer='adam',
@@ -51,3 +64,17 @@ class Bidirectional_LSTM_Model(BaseModel):
         # print(model.summary())
         # self._model = model
         return model
+
+
+        # model = Sequential()
+        # model.add(Embedding(max_features, embedding_size, input_length=maxlen))
+        # model.add(Dropout(0.25))
+        # model.add(Conv1D(filters,
+        #                  kernel_size,
+        #                  padding='valid',
+        #                  activation='relu',
+        #                  strides=1))
+        # model.add(MaxPooling1D(pool_size=pool_size))
+        # model.add(LSTM(lstm_output_size))
+        # model.add(Dense(1))
+        # model.add(Activation('sigmoid'))
