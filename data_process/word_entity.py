@@ -1,12 +1,9 @@
  #!/usr/bin/env python -W ignore::DeprecationWarning
 import pandas as pd, numpy as np
 import nltk
-
 from itertools import chain
 import re
-
 import nltk
-
 import nltk.tag.stanford as st
 
 
@@ -47,12 +44,12 @@ def entity_list(train_file, label, tag, save_folder):
 		count+=1
 		# if count<200:
 		# 	continue
-		r=tagger.tag(comment.decode('utf-8').strip().split())
+		r=tagger.tag(comment.split())
 		c = get_continuous_chunks(tag,r)
 		c2 = [" ".join([token for token, tag in ne]) for ne in c]
 		names = names+c2	
-		if count%10 ==0:
-			print(names)
+		if count%100 ==0:
+			# print(names)
 			namelist = names
 			names = []
 			filename = save_folder+'entity_'+str(count)+'.txt'
