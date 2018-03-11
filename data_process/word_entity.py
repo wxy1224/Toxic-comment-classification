@@ -56,7 +56,7 @@ def entity_list(train_file, label, tag, save_folder):
       filename = save_folder + 'entity_' + str(count) + '.txt'
       with open(filename, 'w') as file:
         for item in namelist:
-          item = item.encode('utf-8').strip()
+          item = item.strip()
           file.write("%s\n" % item)
 
 
