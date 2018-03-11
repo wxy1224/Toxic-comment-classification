@@ -1,27 +1,14 @@
  #!/usr/bin/env python -W ignore::DeprecationWarning
 import pandas as pd, numpy as np
 import nltk
-import sklearn_crfsuite
-import eli5
-import matplotlib.pyplot as plt
-import pycrfsuite
 
 from itertools import chain
 import re
 
 import nltk
-import sklearn
-import scipy.stats
-from sklearn.metrics import make_scorer
-from sklearn.cross_validation import cross_val_score
-from sklearn.grid_search import RandomizedSearchCV
-
-import sklearn_crfsuite
-from sklearn_crfsuite import scorers
-from sklearn_crfsuite import metrics
 
 import nltk.tag.stanford as st
-from itertools import groupby
+
 
 tagger = st.StanfordNERTagger('../../stanford-ner/classifiers/english.all.3class.distsim.crf.ser.gz',
                '../../stanford-ner/stanford-ner.jar') 
@@ -75,6 +62,7 @@ def entity_list(train_file, label, tag, save_folder):
 		  			file.write("%s\n" % item)
 
 if __name__ == '__main__':
+	# create_folder("/names/")
 	train_file = '../input/train.csv'
 	label = "identity_hate"
 	save_folder = "names/"
