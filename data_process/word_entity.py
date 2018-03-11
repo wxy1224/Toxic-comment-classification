@@ -26,12 +26,12 @@ from itertools import groupby
 tagger = st.StanfordNERTagger('../../stanford-ner/classifiers/english.all.3class.distsim.crf.ser.gz',
                '../../stanford-ner/stanford-ner.jar') 
 
-def get_continuous_chunks(tag,tagged_sent):
+def get_continuous_chunks(tag2,tagged_sent):
     continuous_chunk = []
     current_chunk = []
 
     for token, tag in tagged_sent:
-    	if tag == tag:
+    	if tag == tag2:
         # if tag == "PERSON":
             current_chunk.append((token, tag))
         else:
@@ -64,7 +64,7 @@ def entity_list(train_file, label, tag, save_folder):
 		c = get_continuous_chunks(tag,r)
 		c2 = [" ".join([token for token, tag in ne]) for ne in c]
 		names = names+c2	
-		if count%100 ==0:
+		if count%10 ==0:
 			print(names)
 			namelist = names
 			names = []
@@ -77,7 +77,7 @@ def entity_list(train_file, label, tag, save_folder):
 if __name__ == '__main__':
 	train_file = '../input/train.csv'
 	label = "identity_hate"
-	save_folder = "locations/"
+	save_folder = "names/"
 	tag = "PERSON"
 	entity_list(train_file, label,tag, save_folder)
 
