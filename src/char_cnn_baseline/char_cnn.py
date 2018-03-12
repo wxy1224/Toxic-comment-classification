@@ -52,7 +52,7 @@ if len(sys.argv) == 2:
         print ("Checkpoint : %s" % str(sys.argv[1]))
         checkpoint = str(sys.argv[1])
 
-data = pd.read_csv("./input/train_30000.csv")
+data = pd.read_csv("./input/train.csv")
 headers = ['id', 'comment_text', 'toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
 meaningful_headers =  ['comment_text', 'toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
 data = pd.DataFrame(data, columns = headers)
@@ -93,7 +93,7 @@ print("docs size", len(docs))
 # print ("!!!!docs::", docs)
 print('Sample doc{}'.format(docs[1200]))
 
-maxlen = 512
+maxlen = 200
 max_sentences = 15
 
 X = np.ones((len(docs), max_sentences, maxlen), dtype=np.int64) * -1
@@ -114,12 +114,12 @@ np.random.shuffle(ids)
 # shuffle
 X = X[ids]
 y = y[ids]
+rows = X.shape[0]
+X_train = X[:rows]
+X_test = X[-100:]
 
-X_train = X[:20000]
-X_test = X[20000:]
-
-y_train = y[:20000]
-y_test = y[20000:]
+y_train = y[:rows]
+y_test = y[-100:]
 
 filter_length = [5, 3, 3]
 nb_filter = [196, 196, 256]
