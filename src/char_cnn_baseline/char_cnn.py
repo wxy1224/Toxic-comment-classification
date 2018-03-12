@@ -10,10 +10,10 @@ import re
 import keras.callbacks
 import sys
 import os
-from src.config.static_config import StaticConfig
 
 
-global_config = StaticConfig()
+
+
 def binarize(x, sz=71):
     return tf.to_float(tf.one_hot(x, sz, on_value=1, off_value=0, axis=-1))
 
