@@ -5,6 +5,7 @@ from itertools import chain
 import re
 import nltk
 import nltk.tag.stanford as st
+import os
 
 tagger = st.StanfordNERTagger(
   '../../stanford-ner/classifiers/english.all.3class.distsim.crf.ser.gz',
