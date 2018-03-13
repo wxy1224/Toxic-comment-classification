@@ -121,8 +121,8 @@ X_test = X[20000:]
 y_train = y[:20000]
 y_test = y[20000:]
 
-filter_length = [5, 3, 3]
-nb_filter = [196, 196, 256]
+filter_length = [2]
+nb_filter = [100]
 pool_length = 2
 # document input
 document = Input(shape=(max_sentences, maxlen), dtype='int64')
@@ -170,7 +170,8 @@ if checkpoint:
     model.load_weights(checkpoint)
 
 file_name = os.path.basename(sys.argv[0]).split('.')[0]
-check_cb = keras.callbacks.ModelCheckpoint('checkpoints/' + file_name + '.{epoch:02d}-{val_loss:.2f}.hdf5',
+#check_cb = keras.callbacks.ModelCheckpoint('checkpoints/' + file_name + '.{epoch:02d}-{val_loss:.2f}.hdf5',
+check_cb = keras.callbacks.ModelCheckpoint('checkpoints/' + file_name + '.hdf5',
                                            monitor='val_loss',
                                            verbose=0, save_best_only=True, mode='min')
 earlystop_cb = keras.callbacks.EarlyStopping(monitor='val_loss', patience=7, verbose=1, mode='auto')
