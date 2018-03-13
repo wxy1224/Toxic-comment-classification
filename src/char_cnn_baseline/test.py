@@ -52,7 +52,7 @@ if len(sys.argv) == 2:
     print ("Checkpoint : %s" % str(sys.argv[1]))
     checkpoint = str(sys.argv[1])
 
-data = pd.read_csv("./input/train.csv")
+data = pd.read_csv("./input/test.csv")
 headers = ['id', 'comment_text', 'toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
 meaningful_headers =  ['comment_text', 'toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
 data = pd.DataFrame(data, columns = headers)
