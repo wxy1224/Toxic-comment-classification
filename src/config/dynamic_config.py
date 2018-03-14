@@ -1,12 +1,12 @@
 class DynamicConfig(object):
     config = {
         "0":{
-            "lstm_length": 50,
+            "lstm_length": 100,
             "dense_dim": 30,
             "drop_out": 0.1,
         },
         "1": {
-            "lstm_length": 150,
+            "lstm_length": 100,
             "dense_dim": 30,
             "drop_out": 0.1,
         },
