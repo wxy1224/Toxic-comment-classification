@@ -15,7 +15,7 @@ class Bidirectional_LSTM_Model(BaseModel):
         self.dynamic_config = DynamicConfig()
         # self.num_called = 0
 
-    def get_model(self, count, lstm_length=50, dense_dim=30, drop_out = 0.1):
+    def get_model(self, count, lstm_length=50, dense_dim=30, drop_out = 0.1, preprocessor=None):
         # if not self._model is None:
         #     return self._model
         # if self.num_called == 1:

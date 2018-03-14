@@ -2,10 +2,13 @@ from src.preprocess.preprocessor import SeqProcessor
 from src.config.static_config import StaticConfig
 from src.train.bidirectional_lstm_model import Bidirectional_LSTM_Model
 from src.train.pretrained_embedding_bidirectional_lstm_model import Bidirectional_LSTM_Model_Pretrained_Embedding
+from src.train.attention_lstm_model import Attention_LSTM_Model
+from src.train.bidirectional_lstm_model_layers_above import Bidirectional_LSTM_Layers_Model
 import pandas as pd
 import pickle
+import numpy as np
 from src.utils.utils import list_files_under_folder, create_folder, is_dir_exist
-
+import sys
 class Predictor(object):
     def __init__(self):
         self.x_test = None
@@ -75,7 +78,7 @@ class Predictor(object):
             new_model = empty_model_object
             new_model.load_weights(one_model_path)
             if is_attention:
-                x_test = np.expand_dims(x_train, axis=-1)
+                x_test = np.expand_dims(x_test, axis=-1)
             y_test = new_model.predict(x_test, batch_size=self.global_config.batch_size)
 
             save_path_for_one = model_folder +"/"+self.global_config.predict_save_name
@@ -99,10 +102,23 @@ class Predictor(object):
 
 
 
-
 if __name__ == '__main__':
     predictor = Predictor()
     # predictor.load_data('./input/test.csv', "./preprocessing_wrapper_demo_output/")
+    test_file_location = sys.argv[1] # ./preprocessing_wrapper_demo_output/test.csv
+    preprocessing_folder = sys.argv[2] # ./preprocessing_wrapper_demo_output/
+    training_folder = sys.argv[3] # ../training_demo_output_augmented
+    predict_folder = sys.argv[4] # ./predict_demo_output_5_augmented
+    use_att = (sys.argv[5] == 'use_att')
+    use_layers = (sys.argv[5] == 'use_layers')
+    # predictor.load_data('./preprocessing_wrapper_demo_output/test.csv', "./preprocessing_wrapper_demo_output/")
+    # predictor.predict(Bidirectional_LSTM_Model_Pretrained_Embedding(), './training_demo_output_augmented','./predict_demo_output_5_augmented')
+    predictor.load_data(test_file_location, preprocessing_folder)
 
-    predictor.load_data('./preprocessing_wrapper_demo_output/test.csv', "./preprocessing_wrapper_demo_output/")
-    predictor.predict(Bidirectional_LSTM_Model_Pretrained_Embedding(), './training_demo_output','./predict_demo_output')
+
+    if use_layers:
+        predictor.predict(Bidirectional_LSTM_Layers_Model(), training_folder, predict_folder)
+    elif use_att:
+        predictor.predict(Attention_LSTM_Model(), training_folder, predict_folder, use_attention=use_att)
+    else:
+        predictor.predict(Bidirectional_LSTM_Model(), training_folder, predict_folder)

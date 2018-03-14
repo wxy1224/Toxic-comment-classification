@@ -12,12 +12,12 @@ SINGLE_ATTENTION_VECTOR = False
 APPLY_ATTENTION_BEFORE_LSTM = False
 
 
-def attention_3d_block(inputs):
+def attention_3d_block(inputs, max_len):
     # inputs.shape = (batch_size, time_steps, input_dim)
     input_dim = int(inputs.shape[2])
     a = Permute((2, 1))(inputs)
-    a = Reshape((input_dim, TIME_STEPS))(a) # this line is not useful. It's just to know which dimension is what.
-    a = Dense(TIME_STEPS, activation='softmax')(a)
+    a = Reshape((input_dim, max_len))(a) # this line is not useful. It's just to know which dimension is what.
+    a = Dense(max_len, activation='softmax')(a)
     if SINGLE_ATTENTION_VECTOR:
         a = Lambda(lambda x: K.mean(x, axis=1), name='dim_reduction')(a)
         a = RepeatVector(input_dim)(a)
@@ -30,11 +30,11 @@ def model_attention_applied_after_lstm(input_max_len,lstm_units, input_dim=INPUT
     inputs = Input(shape=(input_max_len, input_dim,))
 
     lstm_out = LSTM(lstm_units, return_sequences=True)(inputs)
-    attention_mul = attention_3d_block(lstm_out)
+    attention_mul = attention_3d_block(lstm_out, input_max_len)
     attention_mul = Flatten()(attention_mul)
     output = Dense(output_dim, activation='sigmoid')(attention_mul)
     model = Model(input=[inputs], output=output)
-    m.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
     return model
 
 

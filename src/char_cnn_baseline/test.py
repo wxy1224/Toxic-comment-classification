@@ -55,6 +55,7 @@ if len(sys.argv) == 2:
 data = pd.read_csv("./input/test.csv")
 headers = ['id', 'comment_text', 'toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
 meaningful_headers =  ['comment_text', 'toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
+predict_headers = ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
 data = pd.DataFrame(data, columns = headers)
 txt = ''
 docs = []
@@ -177,12 +178,12 @@ check_cb = keras.callbacks.ModelCheckpoint('checkpoints/' + file_name + '.hdf5',
 earlystop_cb = keras.callbacks.EarlyStopping(monitor='val_loss', patience=7, verbose=1, mode='auto')
 history = LossHistory()
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-
-y = model.predict(X_train)
+model.load_weights('./char_cnn.hdf5')
+y = model.predict(X_train, batch_size=32)
 # model.fit(X_train, y_train, validation_data=(X_test, y_test), batch_size=10,
 #           epochs=2, shuffle=True, callbacks=[earlystop_cb, check_cb, history])
 
 # just showing access to the history object
 sample = pd.read_csv('./input/sample_submission.csv')
-sample[meaningful_headers] = y
+sample[predict_headers] = y
 sample.to_csv("{}/{}".format('.', "char_cnn_lstm_submission.csv"), index=False)

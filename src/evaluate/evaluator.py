@@ -3,7 +3,9 @@ from src.config.static_config import StaticConfig
 from sklearn import metrics
 import json
 import numpy as np
+import sys
 from src.utils.utils import is_dir_exist, list_files_under_folder, create_folder
+
 class Evaluator(object):
 
     def __init__(self, label_file_path):
@@ -54,10 +56,14 @@ class Evaluator(object):
                 self.compute_auc(curr_predict_folder_path, file_name, curr_eval_folder_path)
         print("##################### evaluation ends ########################")
 if __name__ == '__main__':
-    predict_folder_path = "./predict_demo_output/"
-
+    # predict_folder_path = "./predict_demo_output/"
+    predict_folder_path = sys.argv[1] # ./predict_demo_output/
+    evaluate_folder_path = sys.argv[2]#"./evaluate_demo_output/"
     original_label_full_path = "{}/{}".format(predict_folder_path, "original_label_save.csv")
     evaluator = Evaluator(original_label_full_path)
-    evaluator.evaluate(predict_folder_path,"./evaluate_demo_output/")
+    evaluator.evaluate(predict_folder_path,evaluate_folder_path)
+
+
+
 
 

@@ -4,10 +4,12 @@ import pandas as pd
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from src.preprocess.preprocessor import SeqProcessor
 from src.train.bidirectional_lstm_model import Bidirectional_LSTM_Model
+from src.train.bidirectional_lstm_model_layers_above import Bidirectional_LSTM_Layers_Model
 from src.train.pretrained_embedding_bidirectional_lstm_model import Bidirectional_LSTM_Model_Pretrained_Embedding
-
-
+from src.train.attention_lstm_model import Attention_LSTM_Model
+import sys
 import pickle
+import numpy as np
 class Trainer(object):
     def __init__(self):
         self.data_sets = []
@@ -56,8 +58,18 @@ class Trainer(object):
         return history_dic
 
 if __name__ == '__main__':
+    output_path = sys.argv[1]
+    preprocessing_folder = sys.argv[2]
+    use_att = (sys.argv[3] == 'use_att')
+    use_layers = (sys.argv[3] == 'use_layers')
     trainer = Trainer()
-    output_path = './training_demo_output'
-    trainer.load_data('./preprocessing_wrapper_demo_output')
-    history_dic = trainer.train(Bidirectional_LSTM_Model_Pretrained_Embedding(), output_path)
+    # output_path = './training_demo_output_augmented'
+    # trainer.load_data('./preprocessing_wrapper_demo_output')
+    trainer.load_data(preprocessing_folder)
+    if use_layers:
+        history_dic = trainer.train(Bidirectional_LSTM_Layers_Model(), output_path)
+    elif use_att:
+        history_dic = trainer.train(Attention_LSTM_Model(), output_path, attention_model=use_att)
+    else:
+        history_dic = trainer.train(Bidirectional_LSTM_Model(), output_path)
     print(history_dic)
