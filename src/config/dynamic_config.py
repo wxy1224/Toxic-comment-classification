@@ -6,7 +6,7 @@ class DynamicConfig(object):
             "drop_out": 0.1,
         },
         "1": {
-            "lstm_length": 150,
+            "lstm_length": 100,
             "dense_dim": 30,
             "drop_out": 0.5,
         },
