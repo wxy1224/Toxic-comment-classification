@@ -31,7 +31,7 @@ class Trainer(object):
                 self.data_sets.append((self.preprocessor.preprocess_train(loaded_sample, submission)
                                        , train_data_folder_path, sub_folder, sample))
 
-    def train(self, model, model_save_folder_path):
+    def train(self, model, model_save_folder_path, attention_model=False):
         print("##################### training starts ########################")
         history_dic = {}
         create_folder(model_save_folder_path)
@@ -47,7 +47,8 @@ class Trainer(object):
             checkpoint = ModelCheckpoint(file_path, monitor='val_loss', verbose=1, save_best_only=True, mode='min')
             early = EarlyStopping(monitor="val_loss", mode="min", patience=self.global_config.patience)
             callbacks_list = [checkpoint, early]
-
+            if attention_model:
+                x_train = np.expand_dims(x_train, axis=-1)
             hist = model_to_train.fit(x_train, y, batch_size=batch_size, epochs=epochs, validation_split=self.global_config.validation_split, callbacks=callbacks_list)
             print(hist)
             history_dic[dataset[2]] = hist

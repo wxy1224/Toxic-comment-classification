@@ -19,7 +19,7 @@ class Predictor(object):
         self.preprocessor = SeqProcessor(tokenizer)
 
     def predict(self, empty_model_object, models_parent_folder_path, prediction_save_path, submission=False
-                , load_sample_submission_file_path=None):
+                , load_sample_submission_file_path=None, use_attention= False):
         print("##################### predict starts ########################")
         create_folder(prediction_save_path)
         if not submission:
@@ -34,7 +34,7 @@ class Predictor(object):
                 empty_model_object.get_model(folder_name, preprocessor=self.preprocessor),
                                                                          models_parent_folder_path,
                                                                          folder_name,
-                                                                         prediction_save_path, x_test[0])
+                                                                         prediction_save_path, x_test[0], is_attention=use_attention)
             if predict_for_model is None:
                 continue
             if predict is None:
@@ -60,7 +60,7 @@ class Predictor(object):
                                             empty_model_object,
                                             models_folder,
                                             folder_name,
-                                            prediction_save_path, x_test):
+                                            prediction_save_path, x_test, is_attention=False):
         model_path = "{}/{}".format(models_folder, folder_name)
         print('predict_for_model_under_same_folder model_path', model_path)
         if not is_dir_exist(model_path):
@@ -74,7 +74,9 @@ class Predictor(object):
             one_model_path = model_path+"/"+model_name
             new_model = empty_model_object
             new_model.load_weights(one_model_path)
-            y_test = new_model.predict(x_test)
+            if is_attention:
+                x_test = np.expand_dims(x_train, axis=-1)
+            y_test = new_model.predict(x_test, batch_size=self.global_config.batch_size)
 
             save_path_for_one = model_folder +"/"+self.global_config.predict_save_name
             pd.DataFrame(y_test,columns=self.global_config.labels).to_csv(save_path_for_one)
