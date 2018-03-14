@@ -12,7 +12,7 @@ SAMPLE_FILE=./input/sample_submission.csv
 #echo "python src/train/trainer.py ./${TRAIN_FOLDER} ./${PREPROCESS_FOLDER} 2&> log.txt"
 #python src/train/trainer.py ./${TRAIN_FOLDER} ./${PREPROCESS_FOLDER} use_att 2&> log.txt
 #python src/predict/predictor.py ./${PREPROCESS_FOLDER}/test.csv ./${PREPROCESS_FOLDER}/ \
-#  ../${TRAIN_FOLDER} ./${PREDICT_FOLDER} use_att 2&>> log.txt
+#  ./${TRAIN_FOLDER} ./${PREDICT_FOLDER} use_att 2&>> log.txt
 #python src/evaluate/evaluator.py ./${PREDICT_FOLDER}/ ./${EVALUATE_FOLDER} use_att 2&>> log.txt
 #python src/submission/submitter.py ${INPUT} ./${PREPROCESS_FOLDER}/ \
 # ./${TRAIN_FOLDER} \
@@ -24,9 +24,11 @@ SAMPLE_FILE=./input/sample_submission.csv
 
 
 echo "python src/train/trainer.py ./${TRAIN_FOLDER} ./${PREPROCESS_FOLDER} use_layers 2&> log.txt"
-python src/train/trainer.py ./${TRAIN_FOLDER} ./${PREPROCESS_FOLDER} use_layers 2&> log.txt
+#python src/train/trainer.py ./${TRAIN_FOLDER} ./${PREPROCESS_FOLDER} use_layers 2&> log.txt
+echo "python src/predict/predictor.py ./${PREPROCESS_FOLDER}/test.csv ./${PREPROCESS_FOLDER}/ \
+  ./${TRAIN_FOLDER} ./${PREDICT_FOLDER} use_layers 2&>> log.txt"
 python src/predict/predictor.py ./${PREPROCESS_FOLDER}/test.csv ./${PREPROCESS_FOLDER}/ \
-  ../${TRAIN_FOLDER} ./${PREDICT_FOLDER} use_layers 2&>> log.txt
+  ./${TRAIN_FOLDER} ./${PREDICT_FOLDER} use_layers 2&>> log.txt
 python src/evaluate/evaluator.py ./${PREDICT_FOLDER}/ ./${EVALUATE_FOLDER} use_layers  2&>> log.txt
 python src/submission/submitter.py ${INPUT} ./${PREPROCESS_FOLDER}/ \
  ./${TRAIN_FOLDER} \
