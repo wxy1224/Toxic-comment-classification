@@ -21,6 +21,10 @@ def verify_new_train(train_file_path):
 if __name__ == '__main__':
     train_file_path = "../input/train.csv"
     new_file_path = "new_train_data/new_train.csv"
-    save_path = "../input/all_train.csv"
+    save_path = "../preprocessing_wrapper_demo_output/0/all_train_hate.csv"
     append(train_file_path, new_file_path, save_path)
     verify_new_train(save_path)
+    new_file_path2 = 'new_train_data/new_train_threat.csv'
+    save_path2 = "../preprocessing_wrapper_demo_output/1/all_train_threat.csv"
+    append(train_file_path, new_file_path2, save_path2)
+    verify_new_train(save_path2)

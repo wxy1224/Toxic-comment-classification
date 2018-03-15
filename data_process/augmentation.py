@@ -29,7 +29,7 @@ def augmentation(orig_tain_path, names_list_path, output_path,
     # if i == 0:
     #   print("comment", comment)
     for k in range(n):
-      s =  names[k]#.decode("UTF-8")
+      s =  names[k].decode("UTF-8")
       if i == 0 and k ==0:
         print ("name",s,"comment", comment)
       if (comment.find(s) > 0):
@@ -51,15 +51,18 @@ def augmentation(orig_tain_path, names_list_path, output_path,
         # 	new_train.to_csv('new_train_data/train_'+str(i)+'.csv', index=False)
         # 	construct=[]
         # 	print(i)
-  print("!!!!construct",len(construct))
+  # print("!!!!construct",len(construct))
   construct_arr = np.array(construct)
-  print("construct_arr", construct_arr.shape)
+  # print("construct_arr", construct_arr.shape)
   new_train = pd.DataFrame(construct_arr, columns=label_cols)
   new_train.to_csv(output_path, index=False)
 
 
 if __name__ == '__main__':
   orig_train_path = '../input/train.csv'
-  names_list_path = 'names.txt'
+  names_list_path = './names/names.txt'
   output_path = 'new_train_data/new_train.csv'
+  augmentation(orig_train_path, names_list_path, output_path)
+  names_list_path = './names_threat/names.txt'
+  output_path = 'new_train_data/new_train_threat.csv'
   augmentation(orig_train_path, names_list_path, output_path)
