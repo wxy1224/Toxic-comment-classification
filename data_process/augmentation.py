@@ -29,7 +29,8 @@ def augmentation(orig_tain_path, names_list_path, output_path,
     # if i == 0:
     #   print("comment", comment)
     for k in range(n):
-      s =  names[k].decode("UTF-8")
+      s = names[k].strip()
+      # s =  names[k].encode('utf-8').strip()
       if i == 0 and k ==0:
         print ("name",s,"comment", comment)
       if (comment.find(s) > 0):
@@ -62,7 +63,7 @@ if __name__ == '__main__':
   orig_train_path = '../input/train.csv'
   names_list_path = './names/names.txt'
   output_path = 'new_train_data/new_train.csv'
-  augmentation(orig_train_path, names_list_path, output_path)
+  # augmentation(orig_train_path, names_list_path, output_path)
   names_list_path = './names_threat/names.txt'
   output_path = 'new_train_data/new_train_threat.csv'
   augmentation(orig_train_path, names_list_path, output_path)
