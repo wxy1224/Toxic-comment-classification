@@ -58,8 +58,8 @@ def entity_list(train_file, label, tag, save_folder):
       filename = save_folder + 'entity_' + str(count) + '.txt'
       with open(filename, 'w') as file:
         for item in namelist:
-          # item = item.strip()
-          item = item.encode('utf-8').strip()
+          item = item.strip()
+          # item = item.encode('utf-8').strip()
           file.write("%s\n" % item)
 
 
@@ -71,7 +71,7 @@ if __name__ == '__main__':
   if not os.path.exists(save_folder):
   	os.makedirs(save_folder)
   tag = "PERSON"
-  # entity_list(train_file, label, tag, save_folder)
+  entity_list(train_file, label, tag, save_folder)
   label2 = "threat"
   save_folder2 = "names_threat/"
   if not os.path.exists(save_folder2):
