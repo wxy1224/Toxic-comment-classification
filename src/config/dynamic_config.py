@@ -23,7 +23,7 @@ class DynamicConfig(object):
         "4": {
             "lstm_length": 100,
             "dense_dim": 30,
-            "drop_out": 0.1,
+            "drop_out": 0.5,
         },
         "5": {
             "lstm_length": 100,
