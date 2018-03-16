@@ -24,10 +24,10 @@ class StaticConfig:
     enable_rebalancing_sampling = False
     train_test_factor = 1.0
     batch_size = 32
-    epoches = 3
+    epoches = 2
     l1_regularizer = 0.0
-    l2_regularizer = 0.00
-    drop_out = 0.5
+    l2_regularizer = 0.001
+
 
     use_raw_for_test = True
 

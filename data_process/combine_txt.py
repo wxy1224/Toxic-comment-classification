@@ -25,6 +25,6 @@ if __name__ == '__main__':
 	output_file = "./names/names.txt"
 	combine_txt(folder, output_file)
 	folder2 = "./names_threat/"
-	output_file2 = ".、names_threat/names.txt"
+	output_file2 = "./names_threat/names.txt"
 	combine_txt(folder2, output_file2)
 

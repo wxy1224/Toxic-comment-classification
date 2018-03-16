@@ -1,6 +1,6 @@
 #!/bin/sh
 #python src/preprocess/preprocessor.py 2&> log.txt
-MODEL_INDEX=7
+MODEL_INDEX=10
 TRAIN_FOLDER=training_demo_output_${MODEL_INDEX}
 PREPROCESS_FOLDER=preprocessing_wrapper_demo_output
 PREDICT_FOLDER=predict_demo_output_${MODEL_INDEX}
@@ -23,8 +23,8 @@ SAMPLE_FILE=./input/sample_submission.csv
 
 
 
-echo "python src/train/trainer.py ./${TRAIN_FOLDER} ./${PREPROCESS_FOLDER} use_layers 2&> log.txt"
-#python src/train/trainer.py ./${TRAIN_FOLDER} ./${PREPROCESS_FOLDER} use_layers 2&> log.txt
+#echo "python src/train/trainer.py ./${TRAIN_FOLDER} ./${PREPROCESS_FOLDER} use_layers 2&> log.txt"
+python src/train/trainer.py ./${TRAIN_FOLDER} ./${PREPROCESS_FOLDER} use_layers 2&> log.txt
 echo "python src/predict/predictor.py ./${PREPROCESS_FOLDER}/test.csv ./${PREPROCESS_FOLDER}/ \
   ./${TRAIN_FOLDER} ./${PREDICT_FOLDER} use_layers 2&>> log.txt"
 python src/predict/predictor.py ./${PREPROCESS_FOLDER}/test.csv ./${PREPROCESS_FOLDER}/ \
