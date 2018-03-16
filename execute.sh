@@ -23,13 +23,26 @@ SAMPLE_FILE=./input/sample_submission.csv
 
 
 
+##echo "python src/train/trainer.py ./${TRAIN_FOLDER} ./${PREPROCESS_FOLDER} use_layers 2&> log.txt"
+#python src/train/trainer.py ./${TRAIN_FOLDER} ./${PREPROCESS_FOLDER} use_layers 2&> log.txt
+#echo "python src/predict/predictor.py ./${PREPROCESS_FOLDER}/test.csv ./${PREPROCESS_FOLDER}/ \
+#  ./${TRAIN_FOLDER} ./${PREDICT_FOLDER} use_layers 2&>> log.txt"
+#python src/predict/predictor.py ./${PREPROCESS_FOLDER}/test.csv ./${PREPROCESS_FOLDER}/ \
+#  ./${TRAIN_FOLDER} ./${PREDICT_FOLDER} use_layers 2&>> log.txt
+#python src/evaluate/evaluator.py ./${PREDICT_FOLDER}/ ./${EVALUATE_FOLDER} use_layers  2&>> log.txt
+#python src/submission/submitter.py ${INPUT} ./${PREPROCESS_FOLDER}/ \
+# ./${TRAIN_FOLDER} \
+# ./${SUBMIT_FOLDER} ${SAMPLE_FILE}  use_layers 2&>> log.txt
+
+
+
 #echo "python src/train/trainer.py ./${TRAIN_FOLDER} ./${PREPROCESS_FOLDER} use_layers 2&> log.txt"
-python src/train/trainer.py ./${TRAIN_FOLDER} ./${PREPROCESS_FOLDER} use_layers 2&> log.txt
-echo "python src/predict/predictor.py ./${PREPROCESS_FOLDER}/test.csv ./${PREPROCESS_FOLDER}/ \
-  ./${TRAIN_FOLDER} ./${PREDICT_FOLDER} use_layers 2&>> log.txt"
+python src/train/trainer.py ./${TRAIN_FOLDER} ./${PREPROCESS_FOLDER} use_no_embedding 2&> log.txt
 python src/predict/predictor.py ./${PREPROCESS_FOLDER}/test.csv ./${PREPROCESS_FOLDER}/ \
-  ./${TRAIN_FOLDER} ./${PREDICT_FOLDER} use_layers 2&>> log.txt
-python src/evaluate/evaluator.py ./${PREDICT_FOLDER}/ ./${EVALUATE_FOLDER} use_layers  2&>> log.txt
-python src/submission/submitter.py ${INPUT} ./${PREPROCESS_FOLDER}/ \
+  ./${TRAIN_FOLDER} ./${PREDICT_FOLDER} use_no_embedding 2&>> log.txt
+python src/evaluate/evaluator.py ./${PREDICT_FOLDER}/ ./${EVALUATE_FOLDER} use_no_embedding  2&>> log.txt
+python src/submission/submitter.py ${INPUT} ./${PREPROCESS_FOLDER}/  \
  ./${TRAIN_FOLDER} \
- ./${SUBMIT_FOLDER} ${SAMPLE_FILE}  use_layers 2&>> log.txt
+ ./${SUBMIT_FOLDER} ${SAMPLE_FILE}  use_no_embedding 2&>> log.txt
+
+

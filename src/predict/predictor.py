@@ -9,6 +9,7 @@ import pickle
 import numpy as np
 from src.utils.utils import list_files_under_folder, create_folder, is_dir_exist
 import sys
+from src.train.bidirectional_lstm_model_layers_no_embedding import Bidirectional_LSTM_Model_Layers_No_Embedding
 class Predictor(object):
     def __init__(self):
         self.x_test = None
@@ -111,6 +112,7 @@ if __name__ == '__main__':
     predict_folder = sys.argv[4] # ./predict_demo_output_5_augmented
     use_att = (sys.argv[5] == 'use_att')
     use_layers = (sys.argv[5] == 'use_layers')
+    use_no_embedding = (sys.argv[5] == 'use_no_embedding')
     # predictor.load_data('./preprocessing_wrapper_demo_output/test.csv', "./preprocessing_wrapper_demo_output/")
     # predictor.predict(Bidirectional_LSTM_Model_Pretrained_Embedding(), './training_demo_output_augmented','./predict_demo_output_5_augmented')
     predictor.load_data(test_file_location, preprocessing_folder)
@@ -118,6 +120,8 @@ if __name__ == '__main__':
 
     if use_layers:
         predictor.predict(Bidirectional_LSTM_Layers_Model(), training_folder, predict_folder)
+    elif use_no_embedding:
+        predictor.predict(Bidirectional_LSTM_Model_Layers_No_Embedding(), training_folder, predict_folder)
     elif use_att:
         predictor.predict(Attention_LSTM_Model(), training_folder, predict_folder, use_attention=use_att)
     else:
