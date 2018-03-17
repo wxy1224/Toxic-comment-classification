@@ -26,7 +26,7 @@ class StaticConfig:
     batch_size = 32
     epoches = 3
     l1_regularizer = 0.0
-    l2_regularizer = 0.001
+    l2_regularizer = 0.000001
 
 
     use_raw_for_test = True
