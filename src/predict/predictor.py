@@ -113,6 +113,7 @@ if __name__ == '__main__':
     use_att = (sys.argv[5] == 'use_att')
     use_layers = (sys.argv[5] == 'use_layers')
     use_no_embedding = (sys.argv[5] == 'use_no_embedding')
+    use_two_layers = (sys.argv[5] == 'use_two_layers')
     # predictor.load_data('./preprocessing_wrapper_demo_output/test.csv', "./preprocessing_wrapper_demo_output/")
     # predictor.predict(Bidirectional_LSTM_Model_Pretrained_Embedding(), './training_demo_output_augmented','./predict_demo_output_5_augmented')
     predictor.load_data(test_file_location, preprocessing_folder)
@@ -124,5 +125,7 @@ if __name__ == '__main__':
         predictor.predict(Bidirectional_LSTM_Model_Layers_No_Embedding(), training_folder, predict_folder)
     elif use_att:
         predictor.predict(Attention_LSTM_Model(), training_folder, predict_folder, use_attention=use_att)
+    elif use_two_layers:
+        predictor.predict(Attention_LSTM_Model(), training_folder, predict_folder)
     else:
         predictor.predict(Bidirectional_LSTM_Model(), training_folder, predict_folder)

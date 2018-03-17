@@ -64,6 +64,7 @@ if __name__ == '__main__':
     use_att = (sys.argv[3] == 'use_att')
     use_layers = (sys.argv[3] == 'use_layers')
     use_no_embedding = (sys.argv[3] == 'use_no_embedding')
+    use_two_layers = (sys.argv[3] == 'use_two_layers')
     trainer = Trainer()
     # output_path = './training_demo_output_augmented'
     # trainer.load_data('./preprocessing_wrapper_demo_output')
@@ -74,6 +75,8 @@ if __name__ == '__main__':
         history_dic = trainer.train(Attention_LSTM_Model(), output_path, attention_model=use_att)
     elif use_no_embedding:
         history_dic = trainer.train(Bidirectional_LSTM_Model_Layers_No_Embedding(), output_path)
+    elif use_two_layers:
+        history_dic = trainer.train(Bidirectional_LSTM_Model_Pretrained_Embedding(), output_path)
     else:
         history_dic = trainer.train(Bidirectional_LSTM_Model(), output_path)
     print(history_dic)

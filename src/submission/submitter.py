@@ -35,6 +35,7 @@ if __name__ == '__main__':
     use_att = (sys.argv[6] == 'use_att')
     use_layers = (sys.argv[6] == 'use_layers')
     use_no_embedding = (sys.argv[6] == 'use_no_embedding')
+    use_two_layers = (sys.argv[6] == 'use_two_layers')
     submitter.load_data(input_test_file, preprocessing_folder)
     if use_layers:
         submitter.submit(Bidirectional_LSTM_Layers_Model(), train_output_folder, submit_output_folder, sample_input_file)
@@ -43,6 +44,8 @@ if __name__ == '__main__':
                          sample_input_file)
     elif use_att:
         submitter.submit(Attention_LSTM_Model(), train_output_folder, submit_output_folder, sample_input_file, use_att=use_att)
+    elif use_two_layers:
+        submitter.submit(Bidirectional_LSTM_Model_Pretrained_Embedding(), train_output_folder, submit_output_folder, sample_input_file)
     else:
         submitter.submit(Bidirectional_LSTM_Model(), train_output_folder, submit_output_folder, sample_input_file)
 
