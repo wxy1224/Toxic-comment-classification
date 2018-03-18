@@ -2,11 +2,11 @@
 
 class StaticConfig:
     labels = ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
-    model_names = ["{}".format(i) for i in range(2)]
+    model_names = ["{}".format(i) for i in range(1)]
     max_features = 50000
     maxlen = 200
     patience = 20
-    validation_split = 0.1
+    validation_split = 0.01
     model_save_name = "weights_base.best.hdf5"
     ensemble_model_save_name = "weights_ensemble.best.hdf5"
     tokenizer_save_name = "tokenizer_save.p"
@@ -26,8 +26,8 @@ class StaticConfig:
     batch_size = 32
     epoches = 3
     l1_regularizer = 0.0
-    l2_regularizer = 0.00
-    drop_out = 0.5
+    l2_regularizer = 0.000001
+
 
     use_raw_for_test = True
 

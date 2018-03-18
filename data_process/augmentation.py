@@ -14,7 +14,7 @@ def augmentation(orig_tain_path, names_list_path, output_path,
   with codecs.open(names_list_path, encoding='utf-8') as file:
 
     names = file.readlines()
-    names = map(lambda x: x.strip(), names)
+    names = [x.strip() for x in names]
   # names = names.split("\n")
   n = len(names)
   print(names[0])
@@ -62,8 +62,8 @@ def augmentation(orig_tain_path, names_list_path, output_path,
 if __name__ == '__main__':
   orig_train_path = '../input/train.csv'
   names_list_path = './names/names.txt'
-  output_path = 'new_train_data/new_train.csv'
-  # augmentation(orig_train_path, names_list_path, output_path)
+  output_path = 'new_train_data/new_train_id_hate.csv'
+  augmentation(orig_train_path, names_list_path, output_path)
   names_list_path = './names_threat/names.txt'
   output_path = 'new_train_data/new_train_threat.csv'
   augmentation(orig_train_path, names_list_path, output_path)

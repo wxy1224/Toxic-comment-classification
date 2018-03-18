@@ -7,6 +7,7 @@ from src.train.bidirectional_lstm_model_layers_above import Bidirectional_LSTM_L
 from src.predict.predictor import Predictor
 import pandas as pd
 import sys
+from src.train.bidirectional_lstm_model_layers_no_embedding import Bidirectional_LSTM_Model_Layers_No_Embedding
 class Submitter(object):
 
     def __init__(self):
@@ -14,11 +15,8 @@ class Submitter(object):
         self.predictor = Predictor()
 
     def load_data(self, input_test_file, preprocessing_folder):
-        # self.predictor.load_data('./input/test.csv', "./preprocessing_wrapper_demo_output/")
         self.predictor.load_data(input_test_file, preprocessing_folder)
     def submit(self,model, train_output_folder, submit_output_folder, sample_input_file, use_att= False):
-        # self.predictor.predict(Bidirectional_LSTM_Model_Pretrained_Embedding(), './training_demo_output_augmented',
-        #                        './submit_demo_output_5_augmented', submission=True, load_sample_submission_file_path='./input/sample_submission.csv')
         self.predictor.predict(model,
                                train_output_folder,
                                submit_output_folder, submission=True,
@@ -33,11 +31,18 @@ if __name__ == '__main__':
     sample_input_file= sys.argv[5] # ./input/sample_submission.csv
     use_att = (sys.argv[6] == 'use_att')
     use_layers = (sys.argv[6] == 'use_layers')
+    use_no_embedding = (sys.argv[6] == 'use_no_embedding')
+    use_two_layers = (sys.argv[6] == 'use_two_layers')
     submitter.load_data(input_test_file, preprocessing_folder)
     if use_layers:
         submitter.submit(Bidirectional_LSTM_Layers_Model(), train_output_folder, submit_output_folder, sample_input_file)
+    elif use_no_embedding:
+        submitter.submit(Bidirectional_LSTM_Model_Layers_No_Embedding(), train_output_folder, submit_output_folder,
+                         sample_input_file)
     elif use_att:
         submitter.submit(Attention_LSTM_Model(), train_output_folder, submit_output_folder, sample_input_file, use_att=use_att)
+    elif use_two_layers:
+        submitter.submit(Bidirectional_LSTM_Model_Pretrained_Embedding(), train_output_folder, submit_output_folder, sample_input_file)
     else:
         submitter.submit(Bidirectional_LSTM_Model(), train_output_folder, submit_output_folder, sample_input_file)
 

@@ -10,6 +10,7 @@ from src.train.attention_lstm_model import Attention_LSTM_Model
 import sys
 import pickle
 import numpy as np
+from src.train.bidirectional_lstm_model_layers_no_embedding import Bidirectional_LSTM_Model_Layers_No_Embedding
 class Trainer(object):
     def __init__(self):
         self.data_sets = []
@@ -62,14 +63,19 @@ if __name__ == '__main__':
     preprocessing_folder = sys.argv[2]
     use_att = (sys.argv[3] == 'use_att')
     use_layers = (sys.argv[3] == 'use_layers')
+    use_no_embedding = (sys.argv[3] == 'use_no_embedding')
+    use_two_layers = (sys.argv[3] == 'use_two_layers')
     trainer = Trainer()
-    # output_path = './training_demo_output_augmented'
-    # trainer.load_data('./preprocessing_wrapper_demo_output')
+
     trainer.load_data(preprocessing_folder)
     if use_layers:
         history_dic = trainer.train(Bidirectional_LSTM_Layers_Model(), output_path)
     elif use_att:
         history_dic = trainer.train(Attention_LSTM_Model(), output_path, attention_model=use_att)
+    elif use_no_embedding:
+        history_dic = trainer.train(Bidirectional_LSTM_Model_Layers_No_Embedding(), output_path)
+    elif use_two_layers:
+        history_dic = trainer.train(Bidirectional_LSTM_Model_Pretrained_Embedding(), output_path)
     else:
         history_dic = trainer.train(Bidirectional_LSTM_Model(), output_path)
     print(history_dic)
