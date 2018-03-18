@@ -126,6 +126,6 @@ if __name__ == '__main__':
     elif use_att:
         predictor.predict(Attention_LSTM_Model(), training_folder, predict_folder, use_attention=use_att)
     elif use_two_layers:
-        predictor.predict(Attention_LSTM_Model(), training_folder, predict_folder)
+        predictor.predict(Bidirectional_LSTM_Model_Pretrained_Embedding(), training_folder, predict_folder)
     else:
         predictor.predict(Bidirectional_LSTM_Model(), training_folder, predict_folder)
