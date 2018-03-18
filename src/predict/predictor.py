@@ -44,11 +44,7 @@ class Predictor(object):
             if predict is None:
                 predict = predict_for_model
             else:
-                # if self.global_config.enable_rebalancing_sampling:
-                #     predict[folder_name] = predict_for_model[folder_name]
-                # else:
                 predict += predict_for_model
-        # if not self.global_config.enable_rebalancing_sampling:
         predict = predict/len(self.global_config.labels)
 
         if submission:
@@ -88,15 +84,6 @@ class Predictor(object):
             if not self.global_config.enable_rebalancing_sampling:
                 break
         average_y_test = y_test_list[0]
-        # if self.global_config.enable_rebalancing_sampling:
-        #     average_y_test = None
-        #     for y_test in y_test_list:
-        #         if average_y_test is None:
-        #             average_y_test = y_test
-        #         else:
-        #             average_y_test += y_test
-        #     average_y_test = average_y_test*1.0/len(y_test_list)
-        # save_path_for_average = model_folder +"/"+self.global_config.average_predict_save_name
         average_df = pd.DataFrame(average_y_test, columns = self.global_config.labels)
         # average_df.to_csv(save_path_for_average)
         return average_df
@@ -114,8 +101,6 @@ if __name__ == '__main__':
     use_layers = (sys.argv[5] == 'use_layers')
     use_no_embedding = (sys.argv[5] == 'use_no_embedding')
     use_two_layers = (sys.argv[5] == 'use_two_layers')
-    # predictor.load_data('./preprocessing_wrapper_demo_output/test.csv', "./preprocessing_wrapper_demo_output/")
-    # predictor.predict(Bidirectional_LSTM_Model_Pretrained_Embedding(), './training_demo_output_augmented','./predict_demo_output_5_augmented')
     predictor.load_data(test_file_location, preprocessing_folder)
 
 

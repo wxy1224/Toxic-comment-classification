@@ -15,11 +15,8 @@ class Submitter(object):
         self.predictor = Predictor()
 
     def load_data(self, input_test_file, preprocessing_folder):
-        # self.predictor.load_data('./input/test.csv', "./preprocessing_wrapper_demo_output/")
         self.predictor.load_data(input_test_file, preprocessing_folder)
     def submit(self,model, train_output_folder, submit_output_folder, sample_input_file, use_att= False):
-        # self.predictor.predict(Bidirectional_LSTM_Model_Pretrained_Embedding(), './training_demo_output_augmented',
-        #                        './submit_demo_output_5_augmented', submission=True, load_sample_submission_file_path='./input/sample_submission.csv')
         self.predictor.predict(model,
                                train_output_folder,
                                submit_output_folder, submission=True,

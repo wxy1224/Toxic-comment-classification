@@ -15,10 +15,9 @@ from numpy import asarray
 from keras.layers import Conv1D, MaxPooling1D
 class Bidirectional_LSTM_Layers_Model(BaseModel):
     def __init__(self):
-        # self._model = None
         self.global_config = StaticConfig()
         self.dynamic_config = DynamicConfig()
-        # self.num_called = 0
+
     def embedding_index(self):
         self.embeddings_index = dict()
         f = open('./input/glove.6B.300d.txt')
@@ -31,19 +30,6 @@ class Bidirectional_LSTM_Layers_Model(BaseModel):
         print('Loaded %s word vectors.' % len(self.embeddings_index))
 
     def get_model(self, count, lstm_length=50, dense_dim=30, drop_out = 0.1, preprocessor=None):
-        # if not self._model is None:
-        #     return self._model
-        # if self.num_called == 1:
-        #     lstm_length = 35
-        # elif self.num_called == 2:
-        #     lstm_length = 75
-        # elif self.num_called == 3:
-        #     dense_dim = 50
-        # elif self.num_called == 4:
-        #     dense_dim = 70
-        # elif self.num_called == 5:
-        #     self.drop_out = 0.5
-        # self.num_called += 1
         self.embedding_index()
         tokenizer = preprocessor.tokenizer
         voc_size = len(tokenizer.word_index) + 1
@@ -66,11 +52,6 @@ class Bidirectional_LSTM_Layers_Model(BaseModel):
 
         inp = Input(shape=(maxlen,), dtype='int32')
         x = Embedding(voc_size, embed_size ,input_length = maxlen, weights=[embedding_matrix])(inp)
-        # x =Conv1D(filters,
-        #                  kernel_size,
-        #                  padding='valid',
-        #                  activation='relu',
-        #                  strides=1)(x)
 
         x = Bidirectional(LSTM(maxlen, return_sequences=True, dropout=drop_out, recurrent_dropout=drop_out))(x)
         x = GlobalMaxPool1D()(x)
@@ -95,10 +76,6 @@ class Bidirectional_LSTM_Layers_Model(BaseModel):
             x = Dense(dense_dim, activation="relu")(x)
 
         x = Dropout(drop_out)(x)
-        # x = Dense(dense_dim, activation="relu", kernel_regularizer=regularizer)(x)
-        # x = Dropout(drop_out)(x)
-        # x=  BatchNormalization()(x)
-        # x = Dropout(drop_out)(x)
         x = Dense(6, activation="sigmoid")(x)
 
 
@@ -106,6 +83,4 @@ class Bidirectional_LSTM_Layers_Model(BaseModel):
         model.compile(loss='binary_crossentropy',
                       optimizer='adam',
                       metrics=[metrics.categorical_accuracy])
-        # print(model.summary())
-        # self._model = model
         return model

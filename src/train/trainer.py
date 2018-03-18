@@ -66,8 +66,7 @@ if __name__ == '__main__':
     use_no_embedding = (sys.argv[3] == 'use_no_embedding')
     use_two_layers = (sys.argv[3] == 'use_two_layers')
     trainer = Trainer()
-    # output_path = './training_demo_output_augmented'
-    # trainer.load_data('./preprocessing_wrapper_demo_output')
+
     trainer.load_data(preprocessing_folder)
     if use_layers:
         history_dic = trainer.train(Bidirectional_LSTM_Layers_Model(), output_path)
