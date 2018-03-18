@@ -35,7 +35,6 @@ class Evaluator(object):
 
         with open('{}/{}'.format(evaluation_folder_path, predict_file_name + "__" + self.global_config.auc_file_name), 'w') as outfile:
             output =self.auc(self.label, predict)
-            # json.dump(output, outfile, ensure_ascii=False)
             json_str = json.dumps(output)
             outfile.write(json_str)
 
@@ -56,7 +55,6 @@ class Evaluator(object):
                 self.compute_auc(curr_predict_folder_path, file_name, curr_eval_folder_path)
         print("##################### evaluation ends ########################")
 if __name__ == '__main__':
-    # predict_folder_path = "./predict_demo_output/"
     predict_folder_path = sys.argv[1] # ./predict_demo_output/
     evaluate_folder_path = sys.argv[2]#"./evaluate_demo_output/"
     original_label_full_path = "{}/{}".format(predict_folder_path, "original_label_save.csv")
