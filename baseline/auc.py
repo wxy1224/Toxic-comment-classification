@@ -19,6 +19,7 @@ def auc(test, subm):
 	for label in labels:
 		true = np.array(test[label].values)
 		pred = np.array(subm[label].values)
+		print(true.shape, pred.shape)
 		auc = metrics.roc_auc_score(true,pred)
 		print(label, auc)
 		fpr[label], tpr[label], _ = roc_curve(true, pred)
@@ -41,7 +42,8 @@ def auc(test, subm):
 	return avg_auc
 
 if __name__ == '__main__':
-	test = pd.read_csv('../input/tr_test.csv')
-	subm = pd.read_csv('../output/pred_tr_test.csv')
+	test = pd.read_csv('../output/original_label_save.csv')
+	subm = pd.read_csv('../output/ensembled_predict_file.csv')
+	print(test.values.shape, subm.values.shape)
 	avg_auc = auc(test,subm)
 	print("average auc ", avg_auc)
